@@ -1,0 +1,27 @@
+.dealer-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.hand-container {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 15px;
+}
+
+.hand-container > * {
+  margin: 0 15px 10px 15px;
+}
+
+.blank-container {
+  display: flex;
+}
+
+.blank-container > * {
+  margin: 0 15px 10px 15px;
+}
+
+.total {
+  text-align: center;
+}

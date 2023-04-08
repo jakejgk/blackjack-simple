@@ -1,0 +1,6 @@
+States of the game
+  1. Blank
+  2. Initial Deal
+  
+
+Order of dealing: Player, Dealer, Player, Dealer face down

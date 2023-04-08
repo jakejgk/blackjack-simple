@@ -1,0 +1,32 @@
+.card-container {
+  outline: green 2px solid;
+  height: 150px;
+  width: 100px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(4, 1fr);
+}
+
+.value {
+  font-size: 36px;
+}
+
+.top {
+  display: inline;
+  justify-self: start;
+  align-self: start;
+}
+
+.bottom {
+  grid-column: -2 / -1;
+  grid-row: -2 / -1;
+  justify-self: end;
+  align-self: end;
+}
+
+.suit {
+  grid-column: 2 / 4;
+  grid-row: 2 / 4;
+  justify-self: center;
+  align-self: center;
+}
