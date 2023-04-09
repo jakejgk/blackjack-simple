@@ -21,8 +21,6 @@ function App() {
   const [dealerTotal, setDealerTotal]= useState('')
   const [playerCards, setPlayerCards] = useState([])
   const [playerTotal, setPlayerTotal] = useState('')
-  const [playerAce, setPlayerAce] = useState(false)
-  const [dealerAce, setDealerAce] = useState(false)
   const [winner, setWinner] = useState('')
   
   // handles player ace (need to make one for both player and dealer)
@@ -31,14 +29,13 @@ function App() {
     // if player over 21 and its players turn
     // FIX THIS
     if (newTotal > 21 && gameStage == 'PLAYER_TURN') {
-      if (playerAce == false) {
-        // loop through players cards
-        for (let i = 0; i < playerCards.length; i++) {
-        // if there is an ace, subtract 10 from newTotal
-          if (playerCards[i].value == 'A') {
-            newTotal -= 10
-            setPlayerAce(true)
-          }
+      let numAces = 0;
+      // loop through players cards
+      for (let i = 0; i < playerCards.length; i++) {
+      // if there is an ace, subtract 10 from newTotal
+        if (playerCards[i].value == 'A' && numAces == 0) {
+          newTotal -= 10
+          numAces++
         }
       }
       // newTotal = total with -10 from ace
@@ -53,15 +50,14 @@ function App() {
   useEffect(() => {
     let newTotal = dealerTotal;
     // if player over 21 and its players turn
-    if (dealerTotal > 21 && gameStage == 'PLAYER_TURN') {
-      if (dealerAce == false) {
-        // loop through players cards
-        for (let i = 0; i < dealerCards.length; i++) {
+    if (newTotal > 21 && gameStage == 'DEALER_TURN') {
+      let numAces = 0;
+      // loop through players cards
+      for (let i = 0; i < dealerCards.length; i++) {
         // if there is an ace, subtract 10 from newTotal
-          if (dealerCards[i].value == 'A') {
-            newTotal -= 10
-            setDealerAce(true)
-          }
+        if (dealerCards[i].value == 'A' && numAces == 0) {
+          newTotal -= 10
+          numAces++
         }
       }
       // newTotal = total with -10 from ace
@@ -89,7 +85,7 @@ function App() {
 
   // sets GameStage to GAME_OVER when dealerTotal is 17 or greater
   useEffect(() => {
-    if (dealerTotal >= 17) {
+    if (dealerTotal >= 17 && gameStage == 'DEALER_TURN') {
       setGameStage(GameStage.GAME_OVER)
     }
   }, [dealerTotal])
@@ -111,11 +107,7 @@ function App() {
         val = 10
         break;
       case 'A':
-        if (playerAce == false)  {
-          val = 11
-        } else {
-          val = 1
-        }
+        val = 11;
         break;
       default:
         val = card.value
@@ -124,7 +116,7 @@ function App() {
       playerNum = parseInt(val)
       setPlayerCards(() => [...playerCards, card])
       setPlayerTotal(() => playerTotal + playerNum)
-    } else if (gameStage == 'DEALER_TURN' && dealerTotal < 21) {
+    } else if (gameStage == 'DEALER_TURN' && dealerTotal < 17) {
       dealerNum = parseInt(val)
       setDealerCards(prevDealerCards => [...prevDealerCards, card])
       setDealerTotal(prevDealerTotal => prevDealerTotal + dealerNum)
@@ -133,6 +125,9 @@ function App() {
 
   // deals 4 cards (stored in playerCards and dealerCards state) and sets GameStage to PLAYER_TURN
   function newGame() {
+    if (gameStage !== 'INITIAL_DEAL') {
+      setGameStage(GameStage.INITIAL_DEAL)
+    }
     let who = 'player'
     let val;
     let playerInitial = [];
