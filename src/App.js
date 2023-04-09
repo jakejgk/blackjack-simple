@@ -22,12 +22,15 @@ function App() {
   const [playerCards, setPlayerCards] = useState([])
   const [playerTotal, setPlayerTotal] = useState('')
   const [playerAce, setPlayerAce] = useState(false)
+  const [dealerAce, setDealerAce] = useState(false)
   const [winner, setWinner] = useState('')
   
+  // handles player ace (need to make one for both player and dealer)
   useEffect(() => {
     let newTotal = playerTotal;
     // if player over 21 and its players turn
-    if (playerTotal > 21 && gameStage == 'PLAYER_TURN') {
+    // FIX THIS
+    if (newTotal > 21 && gameStage == 'PLAYER_TURN') {
       if (playerAce == false) {
         // loop through players cards
         for (let i = 0; i < playerCards.length; i++) {
@@ -46,14 +49,50 @@ function App() {
     }
   }, [playerTotal])
 
+  // handles dealer ace
+  useEffect(() => {
+    let newTotal = dealerTotal;
+    // if player over 21 and its players turn
+    if (dealerTotal > 21 && gameStage == 'PLAYER_TURN') {
+      if (dealerAce == false) {
+        // loop through players cards
+        for (let i = 0; i < dealerCards.length; i++) {
+        // if there is an ace, subtract 10 from newTotal
+          if (dealerCards[i].value == 'A') {
+            newTotal -= 10
+            setDealerAce(true)
+          }
+        }
+      }
+      // newTotal = total with -10 from ace
+      if (newTotal > 21) {
+        setGameStage(GameStage.GAME_OVER)
+      }
+      setDealerTotal(newTotal)
+    }
+  }, [dealerTotal])
+
+
+  // deals a card to dealer every 2 seconds when it is DEALER_TURN
+  let intervalID;
   // need to fix
   useEffect(() => {
     if (gameStage == 'DEALER_TURN') {
-      const timerID = setTimeout(() => {
+      intervalID = setInterval(() => {
         deal()
       }, 2000)
     }
+    return () => {
+      clearInterval(intervalID)
+    }
   }, [gameStage])
+
+  // sets GameStage to GAME_OVER when dealerTotal is 17 or greater
+  useEffect(() => {
+    if (dealerTotal >= 17) {
+      setGameStage(GameStage.GAME_OVER)
+    }
+  }, [dealerTotal])
 
   // useEffect(() => {
   //   // finish this for declaring winner
@@ -83,12 +122,12 @@ function App() {
     }
     if (gameStage == 'PLAYER_TURN' && playerTotal < 21) {
       playerNum = parseInt(val)
-      setPlayerCards([...playerCards, card])
-      setPlayerTotal(playerTotal + playerNum)
+      setPlayerCards(() => [...playerCards, card])
+      setPlayerTotal(() => playerTotal + playerNum)
     } else if (gameStage == 'DEALER_TURN' && dealerTotal < 21) {
       dealerNum = parseInt(val)
-      setDealerCards([...dealerCards, card])
-      setDealerTotal(dealerTotal + dealerNum)
+      setDealerCards(prevDealerCards => [...prevDealerCards, card])
+      setDealerTotal(prevDealerTotal => prevDealerTotal + dealerNum)
     }
   }
 
@@ -128,7 +167,7 @@ function App() {
     setPlayerTotal(playerNum)
     setDealerCards(dealerInitial)
     setDealerTotal(dealerNum)
-    setGameStage(GameStage.PLAYER_TURN)
+    setGameStage(() => GameStage.PLAYER_TURN)
   }
 
   let winnerColor;
