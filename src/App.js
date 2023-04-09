@@ -18,24 +18,27 @@ function App() {
   const [deck, setDeck] = useState(shuffledDeck)
   const [gameStage, setGameStage] = useState(GameStage.INITIAL_DEAL)
   const [dealerCards, setDealerCards] = useState([])
-  const [dealerTotal, setDealerTotal]= useState('')
+  const [dealerTotal, setDealerTotal] = useState('')
+  const [dealerAces, setDealerAces] = useState(0)
   const [playerCards, setPlayerCards] = useState([])
   const [playerTotal, setPlayerTotal] = useState('')
+  // const [playerAces, setPlayerAces] = useState(0)
   const [winner, setWinner] = useState('')
   
   // handles player ace (need to make one for both player and dealer)
+  let playerAces = 0;
   useEffect(() => {
     let newTotal = playerTotal;
     // if player over 21 and its players turn
-    // FIX THIS
     if (newTotal > 21 && gameStage == 'PLAYER_TURN') {
-      let numAces = 0;
       // loop through players cards
       for (let i = 0; i < playerCards.length; i++) {
       // if there is an ace, subtract 10 from newTotal
-        if (playerCards[i].value == 'A' && numAces == 0) {
-          newTotal -= 10
-          numAces++
+        if (playerCards[i].value == 'A') {
+          while (playerTotal > 21 && playerAces > 0) {
+            newTotal -= 10;
+            playerAces--;
+          }
         }
       }
       // newTotal = total with -10 from ace
@@ -48,21 +51,22 @@ function App() {
 
   // handles dealer ace
   useEffect(() => {
+    console.log(playerAces)
     let newTotal = dealerTotal;
     // if player over 21 and its players turn
     if (newTotal > 21 && gameStage == 'DEALER_TURN') {
-      let numAces = 0;
       // loop through players cards
       for (let i = 0; i < dealerCards.length; i++) {
         // if there is an ace, subtract 10 from newTotal
-        if (dealerCards[i].value == 'A' && numAces == 0) {
+        if (dealerCards[i].value == 'A' && dealerAces == 0) {
           newTotal -= 10
-          numAces++
+          setDealerAces(dealerAces + 1)
         }
       }
       // newTotal = total with -10 from ace
       if (newTotal > 21) {
         setGameStage(GameStage.GAME_OVER)
+        setDealerAces(0)
       }
       setDealerTotal(newTotal)
     }
@@ -108,6 +112,7 @@ function App() {
         break;
       case 'A':
         val = 11;
+        playerAces++;
         break;
       default:
         val = card.value
