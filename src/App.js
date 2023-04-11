@@ -24,28 +24,6 @@ function App() {
   const [playerTotal, setPlayerTotal] = useState('')
   const [winner, setWinner] = useState('')
   
-  // handles player ace (need to make one for both player and dealer)
-  // useEffect(() => {
-  //   let playerAce = 0;
-  //   let newTotal = playerTotal;
-  //   // if player over 21 and its players turn
-  //   if (newTotal > 21 && gameStage == 'PLAYER_TURN') {
-  //     // loop through players cards
-  //     for (let i = 0; i < playerCards.length; i++) {
-  //     // if there is an ace, subtract 10 from newTotal
-  //       if (playerCards[i].value == 'A') {
-  //         playerAce++;
-  //       }
-  //     }
-      
-  //     // newTotal = total with -10 from ace
-  //     if (newTotal > 21) {
-  //       setGameStage(GameStage.DEALER_TURN)
-  //     }
-  //     setPlayerTotal(newTotal)
-  //   }
-  // }, [playerTotal])
-  
   const [playerSubtracted, setPlayerSubtracted] = useState(0)
   const [playerAce, setPlayerAce] = useState(false)
   useEffect(() => {
@@ -53,7 +31,7 @@ function App() {
     // if total is greater than 21
     if (newTotal > 21 && gameStage == 'PLAYER_TURN') {
       // if the first 2 cards are both aces, -10 from newTotal
-      if (playerCards.slice(0, 2).filter(card => card.value == 'A').length > 0 && playerAce == false) {
+      if (playerCards.slice(0, 2).filter(card => card.value == 'A').length > 0 && playerAce === false) {
         newTotal -= 10;
         setPlayerSubtracted(prevPlayerSubtracted => prevPlayerSubtracted + 1)
         setPlayerAce(true)
@@ -62,7 +40,7 @@ function App() {
         newTotal -= 10;
         setPlayerSubtracted(prevPlayerSubtracted => prevPlayerSubtracted + 1);
       // if most recent card is not an ace
-      } else if (playerCards[playerCards.length - 1] !== 'A') {
+      } else if (playerCards[playerCards.length - 1].value !== 'A') {
         // if amount of aces in hand is greated than amount of times 10 has been subtracted
         if (playerCards.filter(card => card.value == 'A').length > playerSubtracted) {
           newTotal -= 10;
@@ -75,28 +53,30 @@ function App() {
 
   const [dealerSubtracted, setDealerSubtracted] = useState(0)
   const [dealerAce, setDealerAce] = useState(false)
+  let count = 0;
   // handles dealer ace
   useEffect(() => {
     let newTotal = dealerTotal;
     // if total is greater than 21
     if (newTotal > 21 && gameStage == 'DEALER_TURN') {
       // if the first 2 cards are both aces, -10 from newTotal
-      if (dealerCards.slice(0, 2).filter(card => card.value == 'A').length > 0 && dealerAce == false) {
+      if (dealerCards.slice(0, 2).filter(card => card.value == 'A').length > 0 && dealerAce === false) {
         newTotal -= 10;
         setDealerSubtracted(prevDealerSubtracted => prevDealerSubtracted + 1)
         setDealerAce(true)
       // if most recent card is an ace
-      } else if (playerCards[playerCards.length - 1] == 'A') {
+      } else if (dealerCards[dealerCards.length - 1] == 'A') {
         newTotal -= 10;
         setDealerSubtracted(prevDealerSubtracted => prevDealerSubtracted + 1);
       // if most recent card is not an ace
-      } else if (dealerCards[dealerCards.length - 1] !== 'A') {
+      } else if (dealerCards[dealerCards.length - 1].value !== 'A') {
         // if amount of aces in hand is greated than amount of times 10 has been subtracted
-        if (playerCards.filter(card => card.value == 'A').length > dealerSubtracted) {
+        if (dealerCards.filter(card => card.value == 'A').length > dealerSubtracted) {
           newTotal -= 10;
           setDealerSubtracted(prevDealerSubtracted => prevDealerSubtracted + 1)
         }
       }
+      count++;
       setDealerTotal(newTotal)
     }
   }, [dealerTotal])
@@ -109,7 +89,7 @@ function App() {
     if (gameStage == 'DEALER_TURN') {
       intervalID = setInterval(() => {
         deal()
-      }, 2000)
+      }, 1000)
     }
     return () => {
       clearInterval(intervalID)
@@ -118,7 +98,7 @@ function App() {
 
   // sets GameStage to GAME_OVER when dealerTotal is 17 or greater
   useEffect(() => {
-    if (dealerTotal >= 17 && gameStage == 'DEALER_TURN') {
+    if (dealerTotal >= 17 && gameStage == 'DEALER_TURN' && count == dealerCards.length) {
       setGameStage(GameStage.GAME_OVER)
     }
   }, [dealerTotal])
