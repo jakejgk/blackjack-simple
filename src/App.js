@@ -56,7 +56,7 @@ function App() {
   useEffect(() => {
     if (gameStage == 'DEALER_TURN') {
       intervalID = setInterval(() => {
-        deal()
+        dealerDeal()
       }, 1000)
     }
     return () => {
@@ -95,38 +95,45 @@ function App() {
 
 
   // returns array of card(s) from deck
-  function deal() {
+  function playerDeal() {
     let playerNum = 0;
     let dealerNum = 0;
     let card = deck.pop()
-    let val = cardValue(card.value)
-    console.log('val before is: ', val)
+    let val = parseInt(cardValue(card.value))
     // if player turn
     if (gameStage == 'PLAYER_TURN') {
       // if playerTotal + new card is greater than 21
-      console.log(playerTotal + ' ' + val)
+      console.log('playerTotal + val ', playerTotal + val)
       if (playerTotal + val > 21) {
-        console.log('firing')
         // if recent card is an ace, make val 1
         if (val == 11) {
           val = 1
-          console.log('val after is: ', val)
+          setPlayerSubtracted(prevPlayerSubtracted => prevPlayerSubtracted + 1)
         // if recent card not ace and there are aces in hand still counting as 11
         } else if (playerCards.filter(card => card.value == 'A').length > playerSubtracted) {
-          playerNum -= 10;
-          setPlayerTotal(() => playerTotal + playerNum)
+          console.log('length: ', playerCards.filter(card => card.value == 'A').length, ' playerSubtracted: ', playerSubtracted)
+          val -= 10;
+          console.log('val: ', val)
           setPlayerSubtracted(prevPlayerSubtracted => prevPlayerSubtracted + 1)
         }
       }
     } else if (gameStage == 'DEALER_TURN' && dealerTotal < 17) {
-      dealerNum = parseInt(val)
+      dealerNum = val
       setDealerCards(prevDealerCards => [...prevDealerCards, card])
       setDealerTotal(prevDealerTotal => prevDealerTotal + dealerNum)
     }
-    console.log('final val is: ', val)
-    playerNum = parseInt(val)
+    playerNum = val
     setPlayerTotal(() => playerTotal + playerNum)
     setPlayerCards(() => [...playerCards, card])
+  }
+
+  function dealerDeal() {
+    let dealerNum = 0;
+    let card = deck.pop()
+    let val = parseInt(cardValue(card.value))
+    dealerNum = val
+    setDealerCards(prevDealerCards => [...prevDealerCards, card])
+    setDealerTotal(prevDealerTotal => prevDealerTotal + dealerNum)
   }
 
   // deals 4 cards (stored in playerCards and dealerCards state) and sets GameStage to PLAYER_TURN
@@ -177,7 +184,7 @@ function App() {
 
   function hit() {
     if (playerTotal < 21) {
-      deal()
+      playerDeal()
     }
   }
 
@@ -205,7 +212,7 @@ function App() {
       <div className='buttons'>
         <button onClick={hit}>Hit</button>
         <button onClick={stand}>Stand</button>
-        <button onClick={() => deal(1)}>Deal</button>
+        <button onClick={() => playerDeal()}>Deal</button>
         <button onClick={newGame}>New Game</button>
       </div>
     </div>
