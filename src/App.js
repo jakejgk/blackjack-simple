@@ -24,71 +24,7 @@ function App() {
   const [playerCards, setPlayerCards] = useState([])
   const [playerTotal, setPlayerTotal] = useState('')
   const [playerSubtracted, setPlayerSubtracted] = useState(0)
-  const [winner, setWinner] = useState('')
-
-  
-  // deals a card to player
-  function playerDeal() {
-    let playerNum = 0;
-    let card = deck.pop()
-    let val = parseInt(cardValue(card.value))
-    // if player turn and if playerTotal + new card is greater than 21
-    if (gameStage == 'PLAYER_TURN' && playerTotal + val > 21) {
-      // if recent card is an ace, make val 1
-      if (val == 11) {
-        val = 1
-        setPlayerSubtracted(prevPlayerSubtracted => prevPlayerSubtracted + 1)
-      // if recent card not ace and there are aces in hand still counting as 11
-      } else if (playerCards.filter(card => card.value == 'A').length > playerSubtracted) {
-        val -= 10;
-        setPlayerSubtracted(prevPlayerSubtracted => prevPlayerSubtracted + 1)
-      }
-    } 
-    playerNum = val
-    setPlayerTotal(() => playerTotal + playerNum)
-    setPlayerCards(() => [...playerCards, card])
-  }
-
-  let intervalID;
-  useEffect(() => {
-    if (gameStage == 'DEALER_TURN') {
-      setTimeout(() => {
-        dealerDeal(dealerTotal, setDealerTotal, dealerSubtracted, setDealerSubtracted, dealerCards, setDealerCards)
-      }, '1000');
-    }
-  }, [gameStage, dealerCards])
-  
-  // deals a card to dealer
-  function dealerDeal(dealerTotal, setDealerTotal, dealerSubtracted, setDealerSubtracted, dealerCards, setDealerCards) {
-    let dealerNum = 0;
-    let card = deck.pop()
-    let val = parseInt(cardValue(card.value))
-    console.log('val: ', val)
-    console.log(dealerCards)
-    console.log('dealer aces ', dealerCards.filter(card => card.value == 'A').length, ' > ', dealerSubtracted)
-    // if dealer turn and if dealerTotal + new card is greater than 21
-    if (gameStage == 'DEALER_TURN' && dealerTotal + val > 21) {
-      // if recent card is an ace, make val 1
-      if (val == 11) {
-        val -= 10
-        setDealerSubtracted(prevDealerSubtracted => prevDealerSubtracted + 1)
-        // if recent card not ace and there are aces in hand still counting as 11
-      } else if (dealerCards.filter(card => card.value == 'A').length > dealerSubtracted) {
-        console.log('fired')
-        val -= 10
-        setDealerSubtracted(prevDealerSubtracted => prevDealerSubtracted + 1)
-      }
-    }
-    dealerNum = val
-    setDealerCards(prevDealerCards => [...prevDealerCards, card])
-    setDealerTotal(prevDealerTotal => prevDealerTotal + dealerNum)
-
-    // this replaces useEffect
-    if (dealerTotal + dealerNum >= 17 && gameStage == 'DEALER_TURN') {
-      console.log('this ended game')
-      setGameStage(GameStage.GAME_OVER)
-    }
-  }
+  const [outcome, setOutcome] = useState('')
 
   // deals 4 cards (stored in playerCards and dealerCards state) and sets GameStage to PLAYER_TURN
   function newGame() {
@@ -96,6 +32,7 @@ function App() {
       setGameStage(GameStage.INITIAL_DEAL)
       setPlayerSubtracted(0)
       setDealerSubtracted(0)
+      setOutcome('')
     }
     let who = 'player'
     let playerInitial = [];
@@ -133,15 +70,69 @@ function App() {
     setDealerCards(dealerInitial)
     setGameStage(() => GameStage.PLAYER_TURN)
   }
+  
+  // deals a card to player
+  function playerDeal() {
+    let playerNum = 0;
+    let card = deck.pop()
+    let val = parseInt(cardValue(card.value))
+    // if player turn and if playerTotal + new card is greater than 21
+    if (gameStage == 'PLAYER_TURN' && playerTotal + val > 21) {
+      // if recent card is an ace, make val 1
+      if (val == 11) {
+        val = 1
+        setPlayerSubtracted(prevPlayerSubtracted => prevPlayerSubtracted + 1)
+      // if recent card not ace and there are aces in hand still counting as 11
+      } else if (playerCards.filter(card => card.value == 'A').length > playerSubtracted) {
+        val -= 10;
+        setPlayerSubtracted(prevPlayerSubtracted => prevPlayerSubtracted + 1)
+      }
+    } 
+    playerNum = val
+    setPlayerTotal(() => playerTotal + playerNum)
+    setPlayerCards(() => [...playerCards, card])
+  }
+  
+  // deals a card to dealer
+  function dealerDeal() {
+    let dealerNum = 0;
+    let card = deck.pop()
+    let val = parseInt(cardValue(card.value))
+    console.log('val: ', val)
+    console.log(dealerCards)
+    console.log('dealer aces ', dealerCards.filter(card => card.value == 'A').length, ' > ', dealerSubtracted)
+    // if dealer turn and if dealerTotal + new card is greater than 21
+    if (gameStage == 'DEALER_TURN' && dealerTotal + val > 21) {
+      // if recent card is an ace, make val 1
+      if (val == 11) {
+        val -= 10
+        setDealerSubtracted(prevDealerSubtracted => prevDealerSubtracted + 1)
+        // if recent card not ace and there are aces in hand still counting as 11
+      } else if (dealerCards.filter(card => card.value == 'A').length > dealerSubtracted) {
+        console.log('fired')
+        val -= 10
+        setDealerSubtracted(prevDealerSubtracted => prevDealerSubtracted + 1)
+      }
+    }
+    dealerNum = val
+    setDealerCards(prevDealerCards => [...prevDealerCards, card])
+    setDealerTotal(prevDealerTotal => prevDealerTotal + dealerNum)
 
-  function stand() {
-    if (dealerTotal >= 17 && dealerCards.length == 2) {
-      console.log('i ended game')
+    // end game if dealer goes above 17
+    if (dealerTotal + dealerNum >= 17 && gameStage == 'DEALER_TURN') {
       setGameStage(GameStage.GAME_OVER)
-    } else {
-      setGameStage(GameStage.DEALER_TURN)
     }
   }
+
+  // interval for dealer deal
+  let intervalID;
+  useEffect(() => {
+    if (gameStage == 'DEALER_TURN') {
+      setTimeout(() => {
+        dealerDeal()
+      }, '1000');
+    }
+  }, [gameStage, dealerCards])
 
   function hit() {
     if (playerTotal < 21) {
@@ -149,11 +140,48 @@ function App() {
     }
   }
 
-  // need to implement
+  function stand() {
+    if (dealerTotal >= 17 && dealerCards.length == 2) {
+      if (dealerTotal === 17 && dealerCards.filter(card => card.value === 'A').length == 1) {
+        setGameStage(GameStage.DEALER_TURN)
+      } else {
+        setGameStage(GameStage.GAME_OVER)
+      }
+    } else {
+      setGameStage(GameStage.DEALER_TURN)
+    }
+  }
+
+  useEffect(() => {
+    if (playerTotal === 21 && playerCards.length === 2) {
+      setGameStage(GameStage.GAME_OVER)
+    }
+  }, [playerTotal])
+
+  function determineWinner() {
+    if (playerTotal > 21) {
+      setOutcome('Lose')
+    } else if (dealerTotal > 21 || playerTotal > dealerTotal) {
+      setOutcome('Win')
+    } else if (playerTotal === dealerTotal){
+      setOutcome('Tie')
+    } else {
+      setOutcome('Lose')
+    }
+  }
+
+  // determines winner
+  useEffect(() => {
+    if (gameStage === GameStage.GAME_OVER) {
+      determineWinner()
+    }
+  }, [gameStage])
+
+  // sets color to green or red depending on winner
   let winnerColor;
-  if (winner == 'player') {
+  if (outcome === 'Win') {
     winnerColor = 'green'
-  } else if (winner == 'dealer') {
+  } else if (outcome === 'Lose') {
     winnerColor = 'red'
   }
 
@@ -169,7 +197,9 @@ function App() {
         playerTotal={playerTotal}
         gameStage={gameStage}
       />
-      {winner.length > 0 ? <p className='winner' style={{color: winnerColor}}>Winner</p> : ''}
+      <div style={{ height: '30px' }}>
+        {outcome && <p className='winner' style={{color: winnerColor}}>{outcome}</p>}
+      </div>
       <div className='buttons'>
         <button onClick={hit}>Hit</button>
         <button onClick={stand}>Stand</button>
