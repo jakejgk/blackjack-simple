@@ -6,6 +6,8 @@
 
 .buttons {
   display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .buttons > * {
@@ -21,4 +23,19 @@ button {
 .winner {
   font-size: 20px;
   margin: 2px;
+}
+
+.num-deck-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.num-deck-container input {
+  margin: 10px;
+}
+
+input {
+  height: 100%;
+  width: 100%;
 }

@@ -1,5 +1,5 @@
 import './App.css';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import deckData from './deck.json';
 import _, { delay, range } from 'lodash';
 import Dealer from './components/Dealer/Dealer';
@@ -14,18 +14,8 @@ function App() {
     DEALER_TURN: 'DEALER_TURN',
     GAME_OVER: 'GAME_OVER'
   }
-  
-  // let multipleDecks = []
-  // function numDecks(deckCount) {
-  //   for (let i = 0; i < deckCount; i++) {
-  //     for (let l = 0; l < deckData.length; l++) {
-  //       multipleDecks.push(deckData[i]);
-  //     }
-  //   }
-  // }
 
-  let shuffledDeck = _.shuffle(multipleDecks)
-  const [deck, setDeck] = useState(shuffledDeck)
+  const [deck, setDeck] = useState(_.shuffle(deckData))
   const [gameStage, setGameStage] = useState(GameStage.INITIAL_DEAL)
   const [dealerCards, setDealerCards] = useState([])
   const [dealerTotal, setDealerTotal] = useState('')
@@ -62,14 +52,14 @@ function App() {
       }
     }
     // if first 2 player cards are both aces
-    if (playerInitial.slice(0, 2).filter(card => card.value == 'A').length == 2) {
+    if (playerInitial.slice(0, 2).filter(card => card.value === 'A').length === 2) {
       setPlayerTotal(12)
       setPlayerSubtracted(prevPlayerSubtracted => prevPlayerSubtracted + 1)
     } else {
       setPlayerTotal(playerNum)
     }
     // if first 2 dealer cards are both aces
-    if (dealerInitial.slice(0, 2).filter(card => card.value == 'A').length == 2) {
+    if (dealerInitial.slice(0, 2).filter(card => card.value === 'A').length === 2) {
       setDealerTotal(12)
       setDealerSubtracted(prevDealerSubtracted => prevDealerSubtracted + 1)
     } else {
@@ -107,17 +97,14 @@ function App() {
     let dealerNum = 0;
     let card = deck.pop()
     let val = parseInt(cardValue(card.value))
-    console.log('val: ', val)
-    console.log(dealerCards)
-    console.log('dealer aces ', dealerCards.filter(card => card.value == 'A').length, ' > ', dealerSubtracted)
     // if dealer turn and if dealerTotal + new card is greater than 21
-    if (gameStage == 'DEALER_TURN' && dealerTotal + val > 21) {
+    if (gameStage === 'DEALER_TURN' && dealerTotal + val > 21) {
       // if recent card is an ace, make val 1
       if (val == 11) {
         val -= 10
         setDealerSubtracted(prevDealerSubtracted => prevDealerSubtracted + 1)
         // if recent card not ace and there are aces in hand still counting as 11
-      } else if (dealerCards.filter(card => card.value == 'A').length > dealerSubtracted) {
+      } else if (dealerCards.filter(card => card.value === 'A').length > dealerSubtracted) {
         console.log('fired')
         val -= 10
         setDealerSubtracted(prevDealerSubtracted => prevDealerSubtracted + 1)
@@ -161,12 +148,14 @@ function App() {
     }
   }
 
+  // ends game if player has blackjack
   useEffect(() => {
     if (playerTotal === 21 && playerCards.length === 2) {
       setGameStage(GameStage.GAME_OVER)
     }
   }, [playerTotal])
 
+  // determines winner
   function determineWinner() {
     if (playerTotal > 21) {
       setOutcome('Lose')
@@ -194,6 +183,20 @@ function App() {
     winnerColor = 'red'
   }
 
+  // handles multiple decks
+  const [numDecks, setNumDecks] = useState(1)
+  const inputRef = useRef(null);
+  let multipleDecks = []
+  function handleNumDecks(numDecks) {
+    for (let i = 0; i < numDecks; i++) {
+      for (let l = 0; l < deckData.length; l++) {
+        multipleDecks.push(deckData[l]);
+      }
+    }
+    setDeck(_.shuffle(multipleDecks))
+    inputRef.current.value = '';
+  }
+
   return (
     <div className="App">
       <Dealer 
@@ -212,13 +215,11 @@ function App() {
       <div className='buttons'>
         <button onClick={hit}>Hit</button>
         <button onClick={stand}>Stand</button>
-        <button onClick={playerDeal}>Deal</button>
         <button onClick={newGame}>New Game</button>
-        {/* make this so the number in the input is set as the number of decks once the button is clicked
-          <div>
-          <input type='number' onClick={handleDeckCount}></input>
-          <button onClick={() => numDecks()}>Set Deck</button>
-        </div> */}
+      </div>
+      <div className='num-deck-container'>
+        <input type='number' onChange={e => setNumDecks(e.target.value)} ref={inputRef} />
+        <button onClick={() => handleNumDecks(numDecks)}>Set Deck Count</button>
       </div>
     </div>
   );

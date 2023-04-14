@@ -14,7 +14,7 @@ const Player = ({ playerCards, gameStage, playerTotal }) => {
                   />
         })}
       </div>
-      <div className='total'>{gameStage == 'INITIAL_DEAL' ? '0' : (playerTotal <= 21 ? ( playerTotal == 21 ? 'Blackjack!' : playerTotal) : 'Bust')}</div>
+      <div className='total'>{gameStage == 'INITIAL_DEAL' ? '0' : (playerTotal <= 21 ? (playerTotal == 21 ? (playerCards.length === 2 ? 'Blackjack!' : '21') : playerTotal) : 'Bust')}</div>
       <div style={{textAlign: 'center', marginTop: '10px'}}>Player</div>
     </div>
   )
