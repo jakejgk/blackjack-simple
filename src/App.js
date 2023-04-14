@@ -14,8 +14,17 @@ function App() {
     DEALER_TURN: 'DEALER_TURN',
     GAME_OVER: 'GAME_OVER'
   }
+  
+  // let multipleDecks = []
+  // function numDecks(deckCount) {
+  //   for (let i = 0; i < deckCount; i++) {
+  //     for (let l = 0; l < deckData.length; l++) {
+  //       multipleDecks.push(deckData[i]);
+  //     }
+  //   }
+  // }
 
-  let shuffledDeck = _.shuffle(deckData)
+  let shuffledDeck = _.shuffle(multipleDecks)
   const [deck, setDeck] = useState(shuffledDeck)
   const [gameStage, setGameStage] = useState(GameStage.INITIAL_DEAL)
   const [dealerCards, setDealerCards] = useState([])
@@ -203,8 +212,13 @@ function App() {
       <div className='buttons'>
         <button onClick={hit}>Hit</button>
         <button onClick={stand}>Stand</button>
-        <button onClick={() => playerDeal()}>Deal</button>
+        <button onClick={playerDeal}>Deal</button>
         <button onClick={newGame}>New Game</button>
+        {/* make this so the number in the input is set as the number of decks once the button is clicked
+          <div>
+          <input type='number' onClick={handleDeckCount}></input>
+          <button onClick={() => numDecks()}>Set Deck</button>
+        </div> */}
       </div>
     </div>
   );
