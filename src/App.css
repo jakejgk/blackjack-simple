@@ -25,18 +25,6 @@ button {
   margin: 2px;
 }
 
-.num-deck-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.num-deck-container input {
-  margin: 10px;
-}
-
-
-
 .hamburger {
   display: block;
   position: fixed;
