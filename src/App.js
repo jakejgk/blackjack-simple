@@ -4,6 +4,7 @@ import deckData from './deck.json';
 import _, { delay, range } from 'lodash';
 import Dealer from './components/Dealer/Dealer';
 import Player from './components/Player/Player';
+import Sidebar from './components/Sidebar/Sidebar';
 import { cardValue } from './functions.js';
 
 function App() {
@@ -197,8 +198,29 @@ function App() {
     inputRef.current.value = '';
   }
 
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false)
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  }
+
   return (
     <div className="App">
+      <button className='hamburger' onClick={toggleSidebar}>
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+      <div className={`sidebar ${isSidebarOpen ? 'open' : ''}`}>
+        <button className='close' onClick={toggleSidebar}>X</button>
+        <Sidebar 
+          isSidebarOpen={isSidebarOpen}
+          numDecks={numDecks}
+          setNumDecks={setNumDecks}
+          handleNumDecks={handleNumDecks}
+          inputRef={inputRef}
+        />
+      </div>
       <Dealer 
         dealerCards={dealerCards}
         dealerTotal={dealerTotal}
@@ -216,10 +238,6 @@ function App() {
         <button onClick={hit}>Hit</button>
         <button onClick={stand}>Stand</button>
         <button onClick={newGame}>New Game</button>
-      </div>
-      <div className='num-deck-container'>
-        <input type='number' onChange={e => setNumDecks(e.target.value)} ref={inputRef} />
-        <button onClick={() => handleNumDecks(numDecks)}>Set Deck Count</button>
       </div>
     </div>
   );
