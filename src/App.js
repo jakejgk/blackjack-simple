@@ -5,7 +5,7 @@ import _, { delay, range } from 'lodash';
 import Dealer from './components/Dealer/Dealer';
 import Player from './components/Player/Player';
 import Sidebar from './components/Sidebar/Sidebar';
-import { cardValue } from './functions.js';
+import { cardValue, book } from './functions.js';
 
 function App() {
 
@@ -211,149 +211,10 @@ function App() {
   }
 
   let dealerNum;
+  // states 1. gameStage, playerCards, dealerCards, playerSubtracted
+  // figure this out
   useEffect(() => {
-    function book() {
-      if (gameStage === GameStage.PLAYER_TURN) {
-        dealerNum = dealerCards[1].value
-        // if player has 2 of the same card
-        if (playerCards.length === 2 && playerCards[0].value === playerCards[1].value) {
-          // if player has aces
-          if (playerCards[0].value === 'A' && playerSubtracted !== playerCards.filter(card => card.value === 'A').length) {
-            return 'Split'
-          } else if (playerCards[0].value === '10') {
-            return 'Stand'
-          } else if (playerCards[0].value === '9') {
-            if (2 <= dealerNum && dealerNum <= 6 || 8 <= dealerNum && dealerNum <= 9) {
-              return 'Split'
-            } else if (dealerNum === 7) {
-              return 'Stand'
-            } else {
-              return 'Stand'
-            }
-          } else if (playerCards[0].value === 8) {
-            return 'Split'
-          } else if (playerCards[0].value === 7) {
-            if (2 <= dealerNum && dealerNum <= 7) {
-              return 'Split'
-            } else {
-              return 'Hit'
-            }
-          } else if (playerCards[0].value === 6) {
-            if (2 <= dealerNum && dealerNum <= 6) {
-              return 'Split'
-            } else {
-              return 'Hit'
-            }
-          } else if (playerCards[0].value === 5) {
-            if (2 <= dealerNum && dealerNum <= 9) {
-              return 'Double'
-            } else {
-              return 'Hit'
-            }
-          } else  if (playerCards[0].value === 4) {
-            if (5 <= dealerNum && dealerNum <= 6) {
-              return 'Split'
-            } else {
-              return 'Hit'
-            }
-          } else if (playerCards[0].value === 3 || playerCards[0].value === 2) {
-            if (2 <= dealerNum && dealerNum <= 7) {
-              return 'Split'
-            } else {
-              return 'Hit'
-            }
-          }
-        // if player has no aces
-        } else if (playerCards.filter(card => card.value === 'A').length === 0) {
-          // if player has 17 - 20
-          if (17 <= playerTotal && playerTotal < 21) {
-            return 'Stand'
-          // if player has 13 - 16
-          } else if (13 <= playerTotal && playerTotal <= 16) {
-            // if dealer has 2 - 6
-            if (2 <= dealerNum <= 6) {
-              return 'Stand'
-            } else {
-              return 'Hit'
-            }
-          // if player has 12
-          } else if (playerTotal === 12) {
-            if (4 <= dealerNum && dealerNum <= 6)  {
-              return 'Stand'
-            } else {
-              return 'Hit'
-            }
-          // if player has 11
-          } else if (playerTotal === 11) {
-            return 'Double'
-          // if player has 10
-          } else if (playerTotal === 10) {
-            if (2 <= dealerNum && dealerNum <= 9) {
-              return 'Double'
-            } else {
-              return 'Hit'
-            }
-          // if player has 9
-          } else if (playerTotal === 9) {
-            if (3 <= dealerNum && dealerNum <= 6) {
-              return 'Double'
-            } else {
-              return 'Hit'
-            }
-          // if player has 8
-          } else if (playerTotal === 8) {
-            return 'Hit'
-          // if player has less than 8
-          } else if (5 <= playerTotal <= 7) {
-            return 'Hit Duh'
-          }
-        // if player has an ace
-        } else {
-          // if player has 20
-          if (playerTotal === 20) {
-            return 'Stand'
-          // if player has 19
-          } else if (playerTotal === 19) {
-            if (dealerNum === 6) {
-              return 'Double'
-            } else {
-              return 'Stand'
-            }
-          // if player has 18
-          } else if (playerTotal === 18) {
-            if (2 <= dealerNum && dealerNum <= 6) {
-              return 'Double'
-            } else if (9 <= dealerNum && dealerNum <= 11) {
-              return 'Hit'
-            } else {
-              return 'Stand'
-            }
-          // if player has 17
-          } else if (playerTotal === 17) {
-            if (3 <= dealerNum && dealerNum <= 6) {
-              return 'Double'
-            } else {
-              return 'Hit'
-            }
-          // if player has 15 - 16
-          } else if (15 <= playerTotal && playerTotal <= 16) {
-            if (4 <= dealerNum && dealerNum <= 6) {
-              return 'Double'
-            } else {
-              return 'Hit'
-            }
-          // if player has 13 - 14
-          } else if (13 <= playerTotal && playerTotal <= 14) {
-            if (5 <= dealerNum && dealerNum <= 6) {
-              return 'Double'
-            } else {
-              return 'Hit'
-            }
-          }
-        }
-      }
-    }
-    setBookAdvice(book())
+    setBookAdvice(book(gameStage, playerCards, playerTotal, dealerCards))
   }, [playerCards])
 
   return (
