@@ -31,47 +31,49 @@ function App() {
 
   // deals 4 cards (stored in playerCards and dealerCards state) and sets GameStage to PLAYER_TURN
   function newGame() {
-    if (gameStage !== 'INITIAL_DEAL') {
-      setGameStage(GameStage.INITIAL_DEAL)
-      setPlayerSubtracted(0)
-      setDealerSubtracted(0)
-      setOutcome('')
-    }
-    let who = 'player'
-    let playerInitial = [];
-    let playerNum = 0;
-    let dealerInitial = [];
-    let dealerNum = 0;
-    for (let i = 0; i < 4; i++) {
-      let card = deck.pop()
-      let val = cardValue(card.value)
-      if (who == 'player') {
-        who = 'dealer'
-        playerInitial.push(card)
-        playerNum += parseInt(val)
-      } else {
-        who = 'player'
-        dealerInitial.push(card)
-        dealerNum += parseInt(val)
+    if (deck.length > 0) {
+      if (gameStage !== 'INITIAL_DEAL') {
+        setGameStage(GameStage.INITIAL_DEAL)
+        setPlayerSubtracted(0)
+        setDealerSubtracted(0)
+        setOutcome('')
       }
-    }
-    // if first 2 player cards are both aces
-    if (playerInitial.slice(0, 2).filter(card => card.value === 'A').length === 2) {
-      setPlayerTotal(12)
-      setPlayerSubtracted(prevPlayerSubtracted => prevPlayerSubtracted + 1)
-    } else {
-      setPlayerTotal(playerNum)
-    }
-    // if first 2 dealer cards are both aces
-    if (dealerInitial.slice(0, 2).filter(card => card.value === 'A').length === 2) {
-      setDealerTotal(12)
-      setDealerSubtracted(prevDealerSubtracted => prevDealerSubtracted + 1)
-    } else {
-      setDealerTotal(dealerNum)
-    }
-    setPlayerCards(playerInitial)
-    setDealerCards(dealerInitial)
-    setGameStage(() => GameStage.PLAYER_TURN)
+      let who = 'player'
+      let playerInitial = [];
+      let playerNum = 0;
+      let dealerInitial = [];
+      let dealerNum = 0;
+      for (let i = 0; i < 4; i++) {
+        let card = deck.pop()
+        let val = cardValue(card.value)
+        if (who == 'player') {
+          who = 'dealer'
+          playerInitial.push(card)
+          playerNum += parseInt(val)
+        } else {
+          who = 'player'
+          dealerInitial.push(card)
+          dealerNum += parseInt(val)
+        }
+      }
+      // if first 2 player cards are both aces
+      if (playerInitial.slice(0, 2).filter(card => card.value === 'A').length === 2) {
+        setPlayerTotal(12)
+        setPlayerSubtracted(prevPlayerSubtracted => prevPlayerSubtracted + 1)
+      } else {
+        setPlayerTotal(playerNum)
+      }
+      // if first 2 dealer cards are both aces
+      if (dealerInitial.slice(0, 2).filter(card => card.value === 'A').length === 2) {
+        setDealerTotal(12)
+        setDealerSubtracted(prevDealerSubtracted => prevDealerSubtracted + 1)
+      } else {
+        setDealerTotal(dealerNum)
+      }
+      setPlayerCards(playerInitial)
+      setDealerCards(dealerInitial)
+      setGameStage(() => GameStage.PLAYER_TURN)
+    } else {alert('No cards left')}
   }
   
   // deals a card to player

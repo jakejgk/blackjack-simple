@@ -60,6 +60,10 @@ button {
   animation: color-btn 0.4s forwards;
 }
 
+#sub-deck-btn:hover {
+  animation: color-btn 0.4s forwards;
+}
+
 @keyframes color-btn {
   0% {
     background-color: white;

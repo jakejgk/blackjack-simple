@@ -16,6 +16,11 @@
   height: 30px;
 }
 
+.buttons > *:hover {
+  /* @keyframe in sidebar.css */
+  animation: color-btn 0.4s forwards;
+}
+
 button {
   cursor: pointer;
 }
