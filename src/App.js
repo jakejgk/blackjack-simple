@@ -5,6 +5,7 @@ import _, { delay, range } from 'lodash';
 import Dealer from './components/Dealer/Dealer';
 import Player from './components/Player/Player';
 import Sidebar from './components/Sidebar/Sidebar';
+import Betting from './components/Betting/Betting';
 import { cardValue, book } from './functions.js';
 
 function App() {
@@ -28,6 +29,8 @@ function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const [showBook, setShowBook] = useState(true)
   const [bookAdvice, setBookAdvice] = useState('')
+  const [currentBet, setCurrentBet] = useState(0)
+  const [totalChips, setTotalChips] = useState(0)
 
   // deals 4 cards (stored in playerCards and dealerCards state) and sets GameStage to PLAYER_TURN
   function newGame() {
@@ -230,6 +233,11 @@ function App() {
 
   const [isActive, setIsActive] = useState(false)
 
+  function handleBet(e) {
+    let bet = e.current.value
+  }
+
+
   return (
     <div className="App">
       {!isSidebarOpen ? <button className={`hamburger ${isActive ? 'active' : ''}`} onClick={toggleSidebar}>
@@ -268,6 +276,7 @@ function App() {
         <button onClick={stand}>Stand</button>
         <button onClick={newGame}>New Game</button>
       </div>
+      <Betting />
     </div>
   );
 }
