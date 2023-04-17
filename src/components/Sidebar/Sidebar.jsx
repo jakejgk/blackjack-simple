@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import './Sidebar.css';
 
-const Sidebar = ({ isSidebarOpen, numDecks, setNumDecks, handleNumDecks, inputRef, showBook, handleBook }) => {
+const Sidebar = ({ isSidebarOpen, numDecks, setNumDecks, handleNumDecks, showBook, handleBook, deck }) => {
   const sidebarClass = isSidebarOpen ? 'sidebar-open' : 'sidebar-close';
 
   return (
@@ -10,8 +10,22 @@ const Sidebar = ({ isSidebarOpen, numDecks, setNumDecks, handleNumDecks, inputRe
       <ul>
         <li>
           <div className='num-deck-container'>
-            <input type='number' onChange={e => setNumDecks(e.target.value)} ref={inputRef} />
-            <button onClick={() => handleNumDecks(numDecks)}>Set Deck Count</button>
+            {/* <input type='number' onChange={e => setNumDecks(e.target.value)} ref={inputRef} />
+            <button onClick={() => handleNumDecks(numDecks)}>Set Deck Count</button> */}
+            <div className='deck-numbers'>
+              <div className='deck-count'>
+                <p>{numDecks}</p>
+                <label style={{fontSize: '16px'}}>Decks</label>
+              </div>
+              <div className='card-count'>
+                <p>{deck.length}</p>
+                <label style={{fontSize: '16px'}}>Cards</label>
+              </div>
+            </div>
+            <div>
+              <button id='add-deck-btn' onClick={handleNumDecks}>+1 Deck</button>
+              <button id='sub-deck-btn' onClick={handleNumDecks}>-1 Deck</button>
+            </div> 
           </div>
         </li>
         <li>
@@ -27,5 +41,4 @@ const Sidebar = ({ isSidebarOpen, numDecks, setNumDecks, handleNumDecks, inputRe
     </div>
   );
 };
-// className={`sidebar ${isSidebarOpen ? 'open' : ''}`}
 export default Sidebar;

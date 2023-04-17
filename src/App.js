@@ -189,40 +189,51 @@ function App() {
 
   // handles multiple decks
   const [numDecks, setNumDecks] = useState(1)
-  const inputRef = useRef(null);
   let multipleDecks = []
-  function handleNumDecks(numDecks) {
-    for (let i = 0; i < numDecks; i++) {
-      for (let l = 0; l < deckData.length; l++) {
-        multipleDecks.push(deckData[l]);
+  function handleNumDecks(e) {
+    if (e.target.id === 'add-deck-btn') {
+      for (let i = 0; i < numDecks + 1; i++) {
+        for (let l = 0; l < deckData.length; l++) {
+          multipleDecks.push(deckData[l]);
+        }
       }
+      setNumDecks(prevNumDecks => prevNumDecks + 1)
+    } else {
+      for (let i = 0; i < numDecks - 1; i++) {
+        for (let l = 0; l < deckData.length; l++) {
+          multipleDecks.push(deckData[l]);
+        }
+      }
+      setNumDecks(prevNumDecks => prevNumDecks - 1)
     }
     setDeck(_.shuffle(multipleDecks))
-    inputRef.current.value = '';
   }
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
+    setIsActive(!isActive)
   }
 
   // show book move or not
-  function handleBook() {
-    setShowBook(!showBook)
+  function handleBook(e) {
+    if (e.target.id === '') {
+      setShowBook(!showBook)
+    }
   }
 
   let dealerNum;
-  // states 1. gameStage, playerCards, dealerCards, playerSubtracted
-  // figure this out
   useEffect(() => {
     setBookAdvice(book(gameStage, playerCards, playerTotal, dealerCards))
   }, [playerCards])
 
+  const [isActive, setIsActive] = useState(false)
+
   return (
     <div className="App">
-      {!isSidebarOpen ? <button className='hamburger' onClick={toggleSidebar}>
-        <span></span>
-        <span></span>
-        <span></span>
+      {!isSidebarOpen ? <button className={`hamburger ${isActive ? 'active' : ''}`} onClick={toggleSidebar}>
+        <span className='line'></span>
+        <span className='line'></span>
+        <span className='line'></span>
       </button> :
       ''}
       <div className={`sidebar ${isSidebarOpen ? 'open' : ''}`}>
@@ -232,9 +243,9 @@ function App() {
           numDecks={numDecks}
           setNumDecks={setNumDecks}
           handleNumDecks={handleNumDecks}
-          inputRef={inputRef}
           showBook={showBook}
           handleBook={handleBook}
+          deck={deck}
         />
       </div>
       <Dealer 
