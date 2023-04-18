@@ -30,7 +30,8 @@ function App() {
   const [showBook, setShowBook] = useState(true)
   const [bookAdvice, setBookAdvice] = useState('')
   const [currentBet, setCurrentBet] = useState(0)
-  const [totalChips, setTotalChips] = useState(0)
+  const [recentBet, setRecentBet] = useState(0)
+  const [totalChips, setTotalChips] = useState(100)
 
   // deals 4 cards (stored in playerCards and dealerCards state) and sets GameStage to PLAYER_TURN
   function newGame() {
@@ -46,6 +47,7 @@ function App() {
       let playerNum = 0;
       let dealerInitial = [];
       let dealerNum = 0;
+      setLastBet(currentBet)
       for (let i = 0; i < 4; i++) {
         let card = deck.pop()
         let val = cardValue(card.value)
@@ -94,7 +96,9 @@ function App() {
       } else if (playerCards.filter(card => card.value == 'A').length > playerSubtracted) {
         val -= 10;
         setPlayerSubtracted(prevPlayerSubtracted => prevPlayerSubtracted + 1)
-      }
+      } else (
+        setGameStage(GameStage.GAME_OVER)
+      )
     } 
     playerNum = val
     setPlayerTotal(() => playerTotal + playerNum)
@@ -126,6 +130,10 @@ function App() {
     // end game if dealer goes above 17
     if (dealerTotal + dealerNum >= 17 && gameStage == 'DEALER_TURN') {
       setGameStage(GameStage.GAME_OVER)
+      if (dealerTotal < 21 && playerTotal > dealerTotal) {
+        setTotalChips(totalChips + currentBet + currentBet)
+      }
+      setCurrentBet(0)
     }
   }
 
@@ -161,6 +169,9 @@ function App() {
   useEffect(() => {
     if (playerTotal === 21 && playerCards.length === 2) {
       setGameStage(GameStage.GAME_OVER)
+      // change this number
+      setTotalChips(totalChips + currentBet + currentBet + currentBet )
+      setCurrentBet(0)
     }
   }, [playerTotal])
 
@@ -168,12 +179,18 @@ function App() {
   function determineWinner() {
     if (playerTotal > 21) {
       setOutcome('Lose')
+      setCurrentBet(0)
     } else if (dealerTotal > 21 || playerTotal > dealerTotal) {
       setOutcome('Win')
+      setCurrentBet(0)
+      setTotalChips(totalChips + currentBet + currentBet)
     } else if (playerTotal === dealerTotal){
       setOutcome('Tie')
+      setCurrentBet(0)
+      setTotalChips(totalChips + currentBet)
     } else {
       setOutcome('Lose')
+      setCurrentBet(0)
     }
   }
 
@@ -226,17 +243,54 @@ function App() {
     }
   }
 
+  // triggers book advice on each card dealt to player
   let dealerNum;
   useEffect(() => {
     setBookAdvice(book(gameStage, playerCards, playerTotal, dealerCards))
   }, [playerCards])
 
+  // for sidebar
   const [isActive, setIsActive] = useState(false)
 
+  // handles bet on click
+  const [lastBet, setLastBet] = useState(0)
   function handleBet(e) {
-    let bet = e.current.value
+    console.log(typeof(lastBet))
+    // bet = bet amount on button
+    let bet = e.target.value
+    if (gameStage === GameStage.INITIAL_DEAL || gameStage === GameStage.GAME_OVER) {
+      if (totalChips > 0) {
+        if (e.target.id === 'rebet-id' && lastBet !== 0) {
+          setCurrentBet(lastBet)
+        } else {
+          // figure this out
+          setCurrentBet(currentBet + parseInt(bet))
+          setTotalChips(totalChips - bet)
+          setRecentBet(bet)
+        }
+      } 
+    } else {alert('No chips left')}
   }
 
+  // resets current bet to 0 and total chips back to what it was before editing current bet
+  function handleReset() {
+    setCurrentBet(0)
+    setTotalChips(totalChips + currentBet)
+  }
+
+  // chips change in sidebar
+  const [userChangeChips, setUserChangeChips] = useState('')
+  function handleChipsChange(e) {
+    setUserChangeChips(e.target.value)
+  }
+
+  // onClick button in sidebar to set total chips to amount in input
+  function handleChipsSubmit(e) {
+    e.preventDefault()
+    handleReset()
+    setTotalChips(userChangeChips)
+    setUserChangeChips('')
+  }
 
   return (
     <div className="App">
@@ -256,6 +310,9 @@ function App() {
           showBook={showBook}
           handleBook={handleBook}
           deck={deck}
+          userChangeChips={userChangeChips}
+          handleChipsChange={handleChipsChange}
+          handleChipsSubmit={handleChipsSubmit}
         />
       </div>
       <Dealer 
@@ -276,7 +333,12 @@ function App() {
         <button onClick={stand}>Stand</button>
         <button onClick={newGame}>New Game</button>
       </div>
-      <Betting />
+      <Betting 
+        currentBet={currentBet}
+        totalChips={totalChips}
+        handleBet={handleBet}
+        handleReset={handleReset}
+      />
     </div>
   );
 }

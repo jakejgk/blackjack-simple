@@ -34,13 +34,13 @@ button {
   border: solid rgb(86, 215, 86) 1px;
 }
 
-.deck-numbers {
+.deck-nums {
   display: flex;
   padding: 20px;
   justify-content: center;
 }
 
-.deck-numbers p {
+.deck-nums p {
   margin: 0px 30px 0px;
 }
 
@@ -72,4 +72,11 @@ button {
   100% {
     background-color: lightgray;
   }
+}
+
+.chips-settings-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }

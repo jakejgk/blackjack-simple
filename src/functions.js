@@ -31,9 +31,6 @@ export function book(game, playerC, playerT, dealerC) {
         // if dealer has 2 - 6 or 8 - 9
         if (2 <= dealerNum && dealerNum <= 6 || 8 <= dealerNum && dealerNum <= 9) {
           return 'Split'
-        // if dealer has 7
-        } else if (dealerNum == 7) {
-          return 'Stand'
         } else {
           return 'Stand'
         }
@@ -164,3 +161,5 @@ export function book(game, playerC, playerT, dealerC) {
     }
   }
 }
+
+// Ace, 3 , 8 against an Ace doesnt work

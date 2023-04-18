@@ -1,6 +1,3 @@
-States of the game
-  1. Blank
-  2. Initial Deal
-  
+center: decks, cards, +/- deck
 
-Order of dealing: Player, Dealer, Player, Dealer face down
+Rebet button, x2
