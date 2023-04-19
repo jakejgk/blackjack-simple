@@ -29,9 +29,6 @@ function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const [showBook, setShowBook] = useState(true)
   const [bookAdvice, setBookAdvice] = useState('')
-  const [currentBet, setCurrentBet] = useState(0)
-  const [recentBet, setRecentBet] = useState(0)
-  const [totalChips, setTotalChips] = useState(100)
 
   // deals 4 cards (stored in playerCards and dealerCards state) and sets GameStage to PLAYER_TURN
   function newGame() {
@@ -42,12 +39,12 @@ function App() {
         setDealerSubtracted(0)
         setOutcome('')
       }
+      setIsBet(false)
       let who = 'player'
       let playerInitial = [];
       let playerNum = 0;
       let dealerInitial = [];
       let dealerNum = 0;
-      setLastBet(currentBet)
       for (let i = 0; i < 4; i++) {
         let card = deck.pop()
         let val = cardValue(card.value)
@@ -130,10 +127,6 @@ function App() {
     // end game if dealer goes above 17
     if (dealerTotal + dealerNum >= 17 && gameStage == 'DEALER_TURN') {
       setGameStage(GameStage.GAME_OVER)
-      if (dealerTotal < 21 && playerTotal > dealerTotal) {
-        setTotalChips(totalChips + currentBet + currentBet)
-      }
-      setCurrentBet(0)
     }
   }
 
@@ -170,8 +163,8 @@ function App() {
     if (playerTotal === 21 && playerCards.length === 2) {
       setGameStage(GameStage.GAME_OVER)
       // change this number
-      setTotalChips(totalChips + currentBet + currentBet + currentBet )
-      setCurrentBet(0)
+      // setTotalChips(totalChips + currentBet + currentBet + currentBet )
+      // setCurrentBet(0)
     }
   }, [playerTotal])
 
@@ -192,9 +185,11 @@ function App() {
       setOutcome('Lose')
       setCurrentBet(0)
     }
+    setRebet(currentBet)
+    setIsBet(true)
   }
 
-  // determines winner
+  // useEffect to determine winner
   useEffect(() => {
     if (gameStage === GameStage.GAME_OVER) {
       determineWinner()
@@ -252,30 +247,36 @@ function App() {
   // for sidebar
   const [isActive, setIsActive] = useState(false)
 
-  // handles bet on click
-  const [lastBet, setLastBet] = useState(0)
+  // START BETTING
+  const [currentBet, setCurrentBet] = useState(0)
+  const [totalChips, setTotalChips] = useState(100)
+  const [rebet, setRebet] = useState(0)
+  const [isBet, setIsBet] = useState(true)
+
   function handleBet(e) {
-    console.log(typeof(lastBet))
     // bet = bet amount on button
     let bet = e.target.value
-    if (gameStage === GameStage.INITIAL_DEAL || gameStage === GameStage.GAME_OVER) {
+    if (isBet) {
+      console.log(bet)
       if (totalChips > 0) {
-        if (e.target.id === 'rebet-id' && lastBet !== 0) {
-          setCurrentBet(lastBet)
-        } else {
-          // figure this out
+        if (e.target.id === 'rebet-btn' && rebet !== 0 && currentBet !== rebet) {
+          setCurrentBet(rebet)
+          setTotalChips(totalChips - rebet)
+          newGame()
+        } else if (bet !== 'rebet') {
           setCurrentBet(currentBet + parseInt(bet))
           setTotalChips(totalChips - bet)
-          setRecentBet(bet)
         }
-      } 
-    } else {alert('No chips left')}
+      } else {alert('No Chips Left')}
+    }
   }
 
   // resets current bet to 0 and total chips back to what it was before editing current bet
   function handleReset() {
-    setCurrentBet(0)
-    setTotalChips(totalChips + currentBet)
+    if (isBet) {
+      setCurrentBet(0)
+      setTotalChips(totalChips + currentBet)
+    }
   }
 
   // chips change in sidebar
@@ -305,7 +306,6 @@ function App() {
         <Sidebar 
           isSidebarOpen={isSidebarOpen}
           numDecks={numDecks}
-          setNumDecks={setNumDecks}
           handleNumDecks={handleNumDecks}
           showBook={showBook}
           handleBook={handleBook}

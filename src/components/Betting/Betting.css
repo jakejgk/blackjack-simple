@@ -35,3 +35,32 @@
   margin: 0px 10px 0px;
 }
 
+.chips-container > button:hover {
+  /* @keyframe in sidebar.css */
+  animation: color-btn 0.4s forwards;
+}
+
+.current > button:hover {
+  /* @keyframe in sidebar.css */
+  animation: color-btn 0.4s forwards;
+}
+
+.container-1 {
+  display: flex;
+  flex-direction: column;
+}
+
+.container-1a {
+  display: flex;
+  margin-bottom: 20px;
+}
+
+.container-1b {
+  display: flex;
+  justify-content: center;
+}
+
+.container-1b > button:hover {
+  /* @keyframe in sidebar.css */
+  animation: color-btn 0.4s forwards;
+}

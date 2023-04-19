@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import './Sidebar.css';
 
-const Sidebar = ({ isSidebarOpen, numDecks, setNumDecks, handleNumDecks, showBook, handleBook, deck, userChangeChips, handleChipsChange, handleChipsSubmit }) => {
+const Sidebar = ({ isSidebarOpen, numDecks, handleNumDecks, showBook, handleBook, deck, userChangeChips, handleChipsChange, handleChipsSubmit }) => {
   const sidebarClass = isSidebarOpen ? 'sidebar-open' : 'sidebar-close';
 
   return (
@@ -10,8 +10,6 @@ const Sidebar = ({ isSidebarOpen, numDecks, setNumDecks, handleNumDecks, showBoo
       <ul>
         <li>
           <div className='num-deck-container'>
-            {/* <input type='number' onChange={e => setNumDecks(e.target.value)} ref={inputRef} />
-            <button onClick={() => handleNumDecks(numDecks)}>Set Deck Count</button> */}
             <div className='deck-nums'>
               <div className='deck-count'>
                 <p>{numDecks}</p>
@@ -22,7 +20,7 @@ const Sidebar = ({ isSidebarOpen, numDecks, setNumDecks, handleNumDecks, showBoo
                 <label style={{fontSize: '16px'}}>Cards</label>
               </div>
             </div>
-            <div>
+            <div className='deck-btn-container'>
               <button id='add-deck-btn' onClick={handleNumDecks}>+1 Deck</button>
               <button id='sub-deck-btn' onClick={handleNumDecks}>-1 Deck</button>
             </div> 
@@ -32,8 +30,8 @@ const Sidebar = ({ isSidebarOpen, numDecks, setNumDecks, handleNumDecks, showBoo
           <div className='book-container'>
             <p style={{ marginTop: '30px', marginBottom: '0px'}}>Show Book</p>
             <div className='book-btn-container'>
-              <button id={showBook ? 'selected' : ''} onClick={handleBook}>Yes</button>
-              <button id={showBook ? '' : 'selected'} onClick={handleBook}>No</button>
+              <button id={showBook ? 'selected' : 'non-selected'} onClick={handleBook}>Yes</button>
+              <button id={showBook ? 'not-selected' : 'selected'} onClick={handleBook}>No</button>
             </div>
           </div>
         </li>
@@ -42,7 +40,7 @@ const Sidebar = ({ isSidebarOpen, numDecks, setNumDecks, handleNumDecks, showBoo
             <p style={{ marginTop: '30px', marginBottom: '0px'}}>Set Chips</p>
             <div className='chips-btn-container'>
               <input value={userChangeChips} onChange={handleChipsChange}></input>
-              <button onClick={handleChipsSubmit}>Set Chips</button>
+              <button id='set-chips-btn' onClick={handleChipsSubmit}>Set Chips</button>
             </div>
           </div>
         </li>

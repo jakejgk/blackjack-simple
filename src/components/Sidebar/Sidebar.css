@@ -34,6 +34,10 @@ button {
   border: solid rgb(86, 215, 86) 1px;
 }
 
+#selected:hover {
+  animation: color-btn-green 0.4s forwards;
+}
+
 .deck-nums {
   display: flex;
   padding: 20px;
@@ -80,3 +84,22 @@ button {
   justify-content: center;
   align-items: center;
 }
+
+#not-selected:hover {
+  animation: color-btn 0.4s forwards;
+}
+
+#set-chips-btn:hover {
+  animation: color-btn 0.4s forwards;
+}
+
+@keyframes color-btn-green {
+  0% {
+    background-color: rgb(86, 215, 86);
+  }
+
+  100% {
+    background-color: rgb(69, 175, 69);
+  }
+}
+
