@@ -38,6 +38,7 @@ function App() {
         setPlayerSubtracted(0)
         setDealerSubtracted(0)
         setOutcome('')
+        setIsDouble(false)
       }
       setIsBet(false)
       let who = 'player'
@@ -100,6 +101,9 @@ function App() {
     playerNum = val
     setPlayerTotal(() => playerTotal + playerNum)
     setPlayerCards(() => [...playerCards, card])
+    if (isDouble == true) {
+      setGameStage(GameStage.DEALER_TURN)
+    }
   }
   
   // deals a card to dealer
@@ -115,7 +119,6 @@ function App() {
         setDealerSubtracted(prevDealerSubtracted => prevDealerSubtracted + 1)
         // if recent card not ace and there are aces in hand still counting as 11
       } else if (dealerCards.filter(card => card.value === 'A').length > dealerSubtracted) {
-        console.log('fired')
         val -= 10
         setDealerSubtracted(prevDealerSubtracted => prevDealerSubtracted + 1)
       }
@@ -185,8 +188,13 @@ function App() {
       setOutcome('Lose')
       setCurrentBet(0)
     }
-    setRebet(currentBet)
-    setIsBet(true)
+    if (isDouble === true) {
+      setRebet(currentBet / 2)
+      setIsBet(true)
+    } else {
+      setRebet(currentBet)
+      setIsBet(true)
+    }
   }
 
   // useEffect to determine winner
@@ -257,7 +265,6 @@ function App() {
     // bet = bet amount on button
     let bet = e.target.value
     if (isBet) {
-      console.log(bet)
       if (totalChips > 0) {
         if (e.target.id === 'rebet-btn' && rebet !== 0 && currentBet !== rebet) {
           setCurrentBet(rebet)
@@ -291,6 +298,18 @@ function App() {
     handleReset()
     setTotalChips(userChangeChips)
     setUserChangeChips('')
+  }
+
+  // double
+  const [isDouble, setIsDouble] = useState(false)
+  function double() {
+    if ((gameStage === GameStage.PLAYER_TURN || gameStage === GameStage.GAME_OVER) && isDouble == false) {
+      setCurrentBet(currentBet + currentBet)
+      setTotalChips(totalChips - currentBet)
+      playerDeal()
+      setGameStage(GameStage.DEALER_TURN)
+      setIsDouble(true)
+    }
   }
 
   return (
@@ -332,6 +351,10 @@ function App() {
         <button onClick={hit}>Hit</button>
         <button onClick={stand}>Stand</button>
         <button onClick={newGame}>New Game</button>
+      </div>
+      <div className='buttons'>
+        <button onClick={double}>Double</button>
+        <button>Split</button>
       </div>
       <Betting 
         currentBet={currentBet}
