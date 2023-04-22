@@ -30,7 +30,7 @@ const Sidebar = ({ isSidebarOpen, numDecks, handleNumDecks, showBook, handleBook
           <div className='book-container'>
             <p style={{ marginTop: '30px', marginBottom: '0px'}}>Show Book</p>
             <div className='book-btn-container'>
-              <button id={showBook ? 'selected' : 'non-selected'} onClick={handleBook}>Yes</button>
+              <button id={showBook ? 'selected' : 'not-selected'} onClick={handleBook}>Yes</button>
               <button id={showBook ? 'not-selected' : 'selected'} onClick={handleBook}>No</button>
             </div>
           </div>

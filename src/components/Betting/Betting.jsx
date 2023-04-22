@@ -3,7 +3,7 @@ import './Betting.css';
 
 const Betting = ({ currentBet, totalChips, handleBet, handleReset }) => {
   return (
-    <div>
+    <div className='betting-container'>
       <div className='chips-container'>
         <button value='1' onClick={handleBet}>+1</button>
         <button value='5' onClick={handleBet}>+5</button>
@@ -12,24 +12,17 @@ const Betting = ({ currentBet, totalChips, handleBet, handleReset }) => {
         <button value='rebet' id='rebet-btn' onClick={handleBet}>Rebet</button>
       </div>
       <div className="bet-nums">
-        <div className='container-1'>
-          <div className='container-1a'>
-            <div className='current'>
-              <p>{currentBet}</p>
-              <label style={{fontSize: '16px'}}>Current Bet</label>
-            </div>
-            <div className='total'>
-              <p>{totalChips}</p>
-              <label style={{fontSize: '16px'}}>Total Chips</label>
-            </div>
-          </div>
-          <div className='container-1b'>
-            <button onClick={handleReset}>Reset Bet</button>
-          </div>
+        <div className='current-bet-container'>
+            <p>{currentBet}</p>
+            <label>Current Bet</label>
         </div>
+        <div className='total-chips-container'>
+          <p>{totalChips}</p>
+          <label>Total Chips</label>
+        </div>
+          <button onClick={handleReset}>Reset Bet</button>
       </div>
     </div>
-    
   )
 }
 

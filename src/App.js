@@ -149,18 +149,18 @@ function App() {
     }
   }
   
-  //test
-
   function stand() {
-    if (dealerTotal >= 17 && dealerCards.length == 2) {
-      if (dealerTotal === 17 && dealerCards.filter(card => card.value === 'A').length == 1) {
-        setGameStage(GameStage.DEALER_TURN)
+    if (gameStage === GameStage.PLAYER_TURN) {
+      if (dealerTotal >= 17 && dealerCards.length == 2) {
+        if (dealerTotal === 17 && dealerCards.filter(card => card.value === 'A').length == 1) {
+          setGameStage(GameStage.DEALER_TURN)
+        } else {
+          setGameStage(GameStage.GAME_OVER)
+        }
       } else {
-        setGameStage(GameStage.GAME_OVER)
+        setGameStage(GameStage.DEALER_TURN)
       }
-    } else {
-      setGameStage(GameStage.DEALER_TURN)
-    }
+    } 
   }
 
   // ends game if player has blackjack
@@ -243,7 +243,7 @@ function App() {
 
   // show book move or not
   function handleBook(e) {
-    if (e.target.id === '') {
+    if (e.target.id === 'not-selected') {
       setShowBook(!showBook)
     }
   }

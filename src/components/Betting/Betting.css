@@ -1,25 +1,48 @@
+.betting-container {
+  display: flex;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+}
+
 .chips-container {
   display: flex;
   justify-content: center;
-  width: 420px;
-  margin-top: 10px;
+}
+
+p {
+  margin: 0;
 }
 
 .bet-nums {
-  position: absolute;
-  top: 20%;
-  right: 10%;
-  width: 300px;
-  height: 200px;
-  border: 2px green solid;
-  color: black;
-  font-size: 24px;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  font-size: 14px;
+  margin-top: 0px;
 }
 
-.current {
+.current-bet-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 3px 0;
+}
+
+.total-chips-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 3px 0;
+}
+
+
+
+/*New above*/
+
+/**//**//**/
+
+/*Old unused below*/
+
+/* .current {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -36,12 +59,10 @@
 }
 
 .chips-container > button:hover {
-  /* @keyframe in sidebar.css */
   animation: color-btn 0.4s forwards;
 }
 
 .current > button:hover {
-  /* @keyframe in sidebar.css */
   animation: color-btn 0.4s forwards;
 }
 
@@ -61,6 +82,5 @@
 }
 
 .container-1b > button:hover {
-  /* @keyframe in sidebar.css */
   animation: color-btn 0.4s forwards;
-}
+} */
