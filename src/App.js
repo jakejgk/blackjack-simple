@@ -148,6 +148,8 @@ function App() {
       playerDeal()
     }
   }
+  
+  //test
 
   function stand() {
     if (gameStage === GameStage.PLAYER_TURN) {
