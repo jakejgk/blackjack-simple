@@ -30,6 +30,7 @@ function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const [showBook, setShowBook] = useState(true)
   const [bookAdvice, setBookAdvice] = useState('')
+  const [isSplitAvailable, setIsSplitAvailable] = useState(false)
 
   // deals 4 cards (stored in playerCards and dealerCards state) and sets GameStage to PLAYER_TURN
   function newGame() {
@@ -62,6 +63,9 @@ function App() {
           dealerInitial.push(card)
           dealerNum += parseInt(val)
         } 
+      }
+      if (playerInitial[0].value === playerInitial[1].value) {
+        setIsSplitAvailable(true)
       }
       // if first 2 player cards are both aces
       if (playerInitial.slice(0, 2).filter(card => card.value === 'A').length === 2) {
@@ -108,30 +112,74 @@ function App() {
   //   })   
   // }
   
+  const [splitFirstPlayerTotal, setSplitFirstPlayerTotal] = useState('')
+  const [splitSecondPlayerTotal, setSplitSecondPlayerTotal] = useState('')
+
   // deals a card to player
+
   function playerDeal() {
     let playerNum = 0;
     let card = deck.pop()
     let val = parseInt(cardValue(card.value))
-    // if player turn and if playerTotal + new card is greater than 21
-    if (gameStage == 'PLAYER_TURN' && playerTotal + val > 21) {
-      // if recent card is an ace, make val 1
-      if (val == 11) {
-        val = 1
-        setPlayerSubtracted(prevPlayerSubtracted => prevPlayerSubtracted + 1)
-      // if recent card not ace and there are aces in hand still counting as 11
-      } else if (playerCards.filter(card => card.value == 'A').length > playerSubtracted) {
-        val -= 10;
-        setPlayerSubtracted(prevPlayerSubtracted => prevPlayerSubtracted + 1)
-      } else (
-        setGameStage(GameStage.GAME_OVER)
-      )
-    } 
-    playerNum = val
-    setPlayerTotal(() => playerTotal + playerNum)
-    setPlayerCards(() => [...playerCards, card])
-    if (isDouble == true) {
-      setGameStage(GameStage.DEALER_TURN)
+    // if player splits
+    if (isSplit) {
+      // if first split is not done
+      if (!isSplitFinished) {
+        if (gameStage == 'PLAYER_TURN' && splitFirstPlayerTotal + val > 21) {
+          // if recent card is an ace, make val 1
+          if (val == 11) {
+            val = 1
+            setPlayerSubtracted(prevPlayerSubtracted => prevPlayerSubtracted + 1)
+          // if recent card not ace and there are aces in hand still counting as 11
+          } else if (playerCards.filter(card => card.value == 'A').length > playerSubtracted) {
+            val -= 10;
+            setPlayerSubtracted(prevPlayerSubtracted => prevPlayerSubtracted + 1)
+          } else (
+            setGameStage(GameStage.GAME_OVER)
+          )
+        } 
+        playerNum = val
+        setSplitFirstPlayerTotal(() => playerTotal + playerNum)
+        setPlayerCards(() => [...playerCards, card])
+      } else {
+          if (gameStage == 'PLAYER_TURN' && splitSecondPlayerTotal + val > 21) {
+            // if recent card is an ace, make val 1
+            if (val == 11) {
+              val = 1
+              setPlayerSubtracted(prevPlayerSubtracted => prevPlayerSubtracted + 1)
+            // if recent card not ace and there are aces in hand still counting as 11
+            } else if (playerCards.filter(card => card.value == 'A').length > playerSubtracted) {
+              val -= 10;
+              setPlayerSubtracted(prevPlayerSubtracted => prevPlayerSubtracted + 1)
+            } else (
+              setGameStage(GameStage.GAME_OVER)
+            )
+          } 
+          playerNum = val
+          setSplitSecondPlayerTotal(() => playerTotal + playerNum)
+          setPlayerCardsSplit(() => [...playerCardsSplit, card])
+      }
+    } else {
+      // if player turn and if playerTotal + new card is greater than 21
+      if (gameStage == 'PLAYER_TURN' && playerTotal + val > 21) {
+        // if recent card is an ace, make val 1
+        if (val == 11) {
+          val = 1
+          setPlayerSubtracted(prevPlayerSubtracted => prevPlayerSubtracted + 1)
+        // if recent card not ace and there are aces in hand still counting as 11
+        } else if (playerCards.filter(card => card.value == 'A').length > playerSubtracted) {
+          val -= 10;
+          setPlayerSubtracted(prevPlayerSubtracted => prevPlayerSubtracted + 1)
+        } else (
+          setGameStage(GameStage.GAME_OVER)
+        )
+      } 
+      playerNum = val
+      setPlayerTotal(() => playerTotal + playerNum)
+      setPlayerCards(() => [...playerCards, card])
+      if (isDouble == true) {
+        setGameStage(GameStage.DEALER_TURN)
+      }
     }
   }
   
@@ -178,6 +226,8 @@ function App() {
     }
   }
   
+  const [isSplitFinished, setIsSplitFinished] = useState(false)
+
   function stand() {
     if (gameStage === GameStage.PLAYER_TURN) {
       if (dealerTotal >= 17 && dealerCards.length == 2) {
@@ -187,7 +237,11 @@ function App() {
           setGameStage(GameStage.GAME_OVER)
         }
       } else {
-        setGameStage(GameStage.DEALER_TURN)
+        if (isSplitFinished === false) {
+          setIsSplitFinished(true)
+        } else {
+          setGameStage(GameStage.DEALER_TURN)
+        }
       }
     } 
   }
@@ -343,6 +397,18 @@ function App() {
     }
   }
 
+  const [isSplit, setIsSplit] = useState(false)
+  const [playerCardsSplit, setPlayerCardsSplit] = useState([])
+
+  function split() {
+    setIsSplit(true)
+    let first = playerCards[0]
+    console.log(first)
+    let second = playerCards[1]
+    setPlayerCards([first])
+    setPlayerCardsSplit([second])
+  }
+
   return (
     <div className="App">
       {!isSidebarOpen ? <button className={`hamburger ${isActive ? 'active' : ''}`} onClick={toggleSidebar}>
@@ -374,6 +440,10 @@ function App() {
         playerCards={playerCards}
         playerTotal={playerTotal}
         gameStage={gameStage}
+        isSplit={isSplit}
+        playerCardsSplit={playerCardsSplit}
+        splitFirstPlayerTotal={splitFirstPlayerTotal}
+        splitSecondPlayerTotal={splitSecondPlayerTotal}
       />
       <div style={{ height: '30px' }}>
         {gameStage === GameStage.PLAYER_TURN ? (showBook ? bookAdvice : '') : (gameStage === GameStage.GAME_OVER ? <p className='winner' style={{color: winnerColor}}>{outcome}</p> : '')}
@@ -384,6 +454,10 @@ function App() {
           stand={stand}
           newGame={newGame}
           double={double}
+          split={split}
+          isSplitAvailable={isSplitAvailable}
+          isSplit={isSplit}
+          handleBet={handleBet}
           gameStage={gameStage}
         />
       </div>

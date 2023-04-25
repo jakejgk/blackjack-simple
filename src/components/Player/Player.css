@@ -21,3 +21,18 @@
 .blank-container > * {
   margin: 10px 15px 0 15px;
 }
+
+.split-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 600px;
+}
+
+.player-cards-container {
+  display: flex;
+}
+
+.split-cards-container {
+  display: flex;
+}

@@ -21,7 +21,6 @@ const Betting = ({ currentBet, totalChips, handleBet, handleReset }) => {
           <label>Total Chips</label>
         </div>
       </div>
-      <button value='rebet' id='rebet-btn' onClick={handleBet}>Rebet</button>
     </div>
   )
 }
