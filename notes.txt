@@ -1,3 +1,5 @@
-center: decks, cards, +/- deck
-
-Rebet button, x2
+need to finish splitting:
+ 1. betting interaction
+ 2. center numbers
+ 3. center new cards
+ 4. highlight which cards are being hit in the moment (can use isSplitFinishedState for that)

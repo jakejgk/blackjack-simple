@@ -33,6 +33,39 @@
   display: flex;
 }
 
+.player-cards-container > * {
+  margin: 10px 15px 0 15px;
+}
+
 .split-cards-container {
   display: flex;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+}
+
+.split-cards-container > * {
+  margin: 10px 15px 0 15px;
+}
+
+.split-totals-container {
+  position: absolute;
+  /* width: 600px; */
+  left: 0;
+  right: 0;
+}
+
+#split-total-left {
+  align-self: center;
+}
+
+#split-total-right {
+  align-self: center;
+}
+
+.split-total {
+  display: flex;
+  justify-content: space-between;
 }

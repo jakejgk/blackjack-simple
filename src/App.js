@@ -66,6 +66,8 @@ function App() {
       }
       if (playerInitial[0].value === playerInitial[1].value) {
         setIsSplitAvailable(true)
+        setSplitFirstPlayerTotal(parseInt(playerInitial[0].value))
+        setSplitSecondPlayerTotal(parseInt(playerInitial[1].value))
       }
       // if first 2 player cards are both aces
       if (playerInitial.slice(0, 2).filter(card => card.value === 'A').length === 2) {
@@ -134,12 +136,16 @@ function App() {
           } else if (playerCards.filter(card => card.value == 'A').length > playerSubtracted) {
             val -= 10;
             setPlayerSubtracted(prevPlayerSubtracted => prevPlayerSubtracted + 1)
-          } else (
-            setGameStage(GameStage.GAME_OVER)
-          )
+          } else {
+            if (isSplit) {
+              setIsSplitFinished(true)
+            } else {
+              setGameStage(GameStage.GAME_OVER)
+            }
+          }
         } 
         playerNum = val
-        setSplitFirstPlayerTotal(() => playerTotal + playerNum)
+        setSplitFirstPlayerTotal(() => splitFirstPlayerTotal + playerNum)
         setPlayerCards(() => [...playerCards, card])
       } else {
           if (gameStage == 'PLAYER_TURN' && splitSecondPlayerTotal + val > 21) {
@@ -156,7 +162,7 @@ function App() {
             )
           } 
           playerNum = val
-          setSplitSecondPlayerTotal(() => playerTotal + playerNum)
+          setSplitSecondPlayerTotal(() => splitSecondPlayerTotal + playerNum)
           setPlayerCardsSplit(() => [...playerCardsSplit, card])
       }
     } else {
@@ -249,7 +255,11 @@ function App() {
   // ends game if player has blackjack
   useEffect(() => {
     if (playerTotal === 21) {
-      setGameStage(GameStage.GAME_OVER)
+      if (isSplit) {
+        setIsSplitFinished(true)
+      } else {
+        setGameStage(GameStage.GAME_OVER)
+      }
       // change this number
       // setTotalChips(totalChips + currentBet + currentBet + currentBet )
       // setCurrentBet(0)
