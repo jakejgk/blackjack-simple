@@ -6,6 +6,7 @@ import Dealer from './components/Dealer/Dealer';
 import Player from './components/Player/Player';
 import Sidebar from './components/Sidebar/Sidebar';
 import Betting from './components/Betting/Betting';
+import Actions from './components/Actions/Actions';
 import { cardValue, book } from './functions.js';
 
 function App() {
@@ -32,6 +33,9 @@ function App() {
 
   // deals 4 cards (stored in playerCards and dealerCards state) and sets GameStage to PLAYER_TURN
   function newGame() {
+    if (currentBet === 0) {
+      return
+    }
     if (deck.length > 0) {
       if (gameStage !== 'INITIAL_DEAL') {
         setGameStage(GameStage.INITIAL_DEAL)
@@ -57,7 +61,7 @@ function App() {
           who = 'player'
           dealerInitial.push(card)
           dealerNum += parseInt(val)
-        }
+        } 
       }
       // if first 2 player cards are both aces
       if (playerInitial.slice(0, 2).filter(card => card.value === 'A').length === 2) {
@@ -76,8 +80,33 @@ function App() {
       setPlayerCards(playerInitial)
       setDealerCards(dealerInitial)
       setGameStage(() => GameStage.PLAYER_TURN)
-    } else {alert('No cards left')}
+      // fix these conditions
+    } else if (deck.length < 4) {
+      alert('No Cards Left')
+    } else if (currentBet === 0) {
+      alert('No bet placed')
+    }
   }
+
+  // for loop that works with setTimeout
+  // for (let i = 0; i < 4; i++) {
+  //   await new Promise(resolve => {
+  //     setTimeout(() => {
+  //       let card = deck.pop()
+  //       let val = cardValue(card.value)
+  //       if (who == 'player') {
+  //         who = 'dealer'
+  //         playerInitial.push(card)
+  //         playerNum += parseInt(val)
+  //       } else {
+  //         who = 'player'
+  //         dealerInitial.push(card)
+  //         dealerNum += parseInt(val)
+  //       }
+  //       resolve()
+  //     }, 2000);
+  //   })   
+  // }
   
   // deals a card to player
   function playerDeal() {
@@ -165,7 +194,7 @@ function App() {
 
   // ends game if player has blackjack
   useEffect(() => {
-    if (playerTotal === 21 && playerCards.length === 2) {
+    if (playerTotal === 21) {
       setGameStage(GameStage.GAME_OVER)
       // change this number
       // setTotalChips(totalChips + currentBet + currentBet + currentBet )
@@ -276,7 +305,7 @@ function App() {
           setCurrentBet(currentBet + parseInt(bet))
           setTotalChips(totalChips - bet)
         }
-      } else {alert('No Chips Left')}
+      } else if (currentBet == 0) {alert('No Chips Left')}
     }
   }
 
@@ -349,14 +378,14 @@ function App() {
       <div style={{ height: '30px' }}>
         {gameStage === GameStage.PLAYER_TURN ? (showBook ? bookAdvice : '') : (gameStage === GameStage.GAME_OVER ? <p className='winner' style={{color: winnerColor}}>{outcome}</p> : '')}
       </div>
-      <div className='buttons'>
-        <button onClick={hit}>Hit</button>
-        <button onClick={stand}>Stand</button>
-        <button onClick={newGame}>New Game</button>
-      </div>
-      <div className='buttons'>
-        <button onClick={double}>Double</button>
-        <button>Split</button>
+      <div>
+        <Actions 
+          hit={hit}
+          stand={stand}
+          newGame={newGame}
+          double={double}
+          gameStage={gameStage}
+        />
       </div>
       <Betting 
         currentBet={currentBet}

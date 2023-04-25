@@ -21,8 +21,8 @@ const Sidebar = ({ isSidebarOpen, numDecks, handleNumDecks, showBook, handleBook
               </div>
             </div>
             <div className='deck-btn-container'>
-              <button id='add-deck-btn' onClick={handleNumDecks}>+1 Deck</button>
               <button id='sub-deck-btn' onClick={handleNumDecks}>-1 Deck</button>
+              <button id='add-deck-btn' onClick={handleNumDecks}>+1 Deck</button>
             </div> 
           </div>
         </li>

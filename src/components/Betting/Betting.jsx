@@ -9,7 +9,7 @@ const Betting = ({ currentBet, totalChips, handleBet, handleReset }) => {
         <button value='5' onClick={handleBet}>+5</button>
         <button value='10' onClick={handleBet}>+10</button>
         <button value='25' onClick={handleBet}>+25</button>
-        <button value='rebet' id='rebet-btn' onClick={handleBet}>Rebet</button>
+        <button onClick={handleReset}>Reset Bet</button>
       </div>
       <div className="bet-nums">
         <div className='current-bet-container'>
@@ -20,8 +20,8 @@ const Betting = ({ currentBet, totalChips, handleBet, handleReset }) => {
           <p>{totalChips}</p>
           <label>Total Chips</label>
         </div>
-          <button onClick={handleReset}>Reset Bet</button>
       </div>
+      <button value='rebet' id='rebet-btn' onClick={handleBet}>Rebet</button>
     </div>
   )
 }

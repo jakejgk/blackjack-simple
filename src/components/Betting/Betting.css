@@ -3,6 +3,8 @@
   position: fixed;
   bottom: 0;
   left: 0;
+  align-items: flex-end;
+  margin-bottom: 4px;
 }
 
 .chips-container {
@@ -16,7 +18,7 @@ p {
 
 .bet-nums {
   display: flex;
-  font-size: 14px;
+  font-size: 20px;
   margin-top: 0px;
 }
 
@@ -32,6 +34,10 @@ p {
   flex-direction: column;
   align-items: center;
   margin: 0 3px 0;
+}
+
+.betting-container button:hover, .chips-container button:hover  {
+  animation: color-btn 0.4s forwards;
 }
 
 

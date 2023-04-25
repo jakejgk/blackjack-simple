@@ -1,0 +1,32 @@
+.buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.buttons > * {
+  margin: 10px 20px;
+  width: auto;
+  min-width: 100px;
+  height: auto;
+  padding: 10px 10px 10px;
+}
+
+.buttons > *:hover {
+  /* @keyframe in sidebar.css */
+  animation: color-btn 0.4s forwards;
+}
+
+button {
+  cursor: pointer;
+}
+
+#dealer-turn-btn {
+  color: white;
+  border: 1px solid white;
+}
+
+#dealer-turn-btn:hover {
+  animation: none !important;
+  cursor: default; 
+}

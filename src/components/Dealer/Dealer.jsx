@@ -5,7 +5,6 @@ import Card from '../Card/Card';
 const Dealer = ({ dealerCards, gameStage, dealerTotal }) => {
   return (
     <div className='dealer-container'>
-      <div style={{textAlign: 'center', marginBottom: '10px'}}>Dealer</div>
       <div className='total'>{gameStage == 'INITIAL_DEAL' ? '0' :
                               (gameStage == 'PLAYER_TURN' ? '0' :
                               (dealerTotal <= 21 ? dealerTotal : 'Bust'))}</div>
