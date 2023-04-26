@@ -2,7 +2,7 @@ import React from 'react';
 import './Player.css';
 import Card from '../Card/Card';
 
-const Player = ({ playerCards, playerCardsSplit, gameStage, playerTotal, isSplit, splitFirstPlayerTotal, splitSecondPlayerTotal }) => {
+const Player = ({ playerCards, playerCardsSplit, gameStage, playerTotal, isSplit, splitFirstPlayerTotal, splitSecondPlayerTotal, isSplitFinished }) => {
   return (
     <div className='player-container'>
       <div className='hand-container'>
@@ -35,7 +35,6 @@ const Player = ({ playerCards, playerCardsSplit, gameStage, playerTotal, isSplit
                             key={index}
                   />
                 })}
-                
               </div>
               {/* <div id='split-total-right'>{isSplit ? splitSecondPlayerTotal : ''}</div> */}
             </div>
@@ -43,8 +42,8 @@ const Player = ({ playerCards, playerCardsSplit, gameStage, playerTotal, isSplit
         )}
       </div>
       {isSplit ? <div className='split-total'>
-        <div style={{ marginLeft: '10px'}}>{splitFirstPlayerTotal}</div>
-        <div style={{ marginRight: '10px'}}>{splitSecondPlayerTotal}</div>
+        <div style={{ marginLeft: '10px', color: !isSplitFinished ? 'green' : ''}}>{splitFirstPlayerTotal}</div>
+        <div style={{ marginRight: '10px', color: !isSplitFinished ? '' : 'green'}}>{splitSecondPlayerTotal}</div>
         
       </div> 
         : ''}

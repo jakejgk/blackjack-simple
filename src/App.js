@@ -32,6 +32,7 @@ function App() {
   const [bookAdvice, setBookAdvice] = useState('')
   const [isSplitAvailable, setIsSplitAvailable] = useState(false)
 
+  // WORKING BUT TRYING TO CHANGE
   // deals 4 cards (stored in playerCards and dealerCards state) and sets GameStage to PLAYER_TURN
   function newGame() {
     if (currentBet === 0) {
@@ -64,6 +65,7 @@ function App() {
           dealerNum += parseInt(val)
         } 
       }
+      // if first 2 player cards are the same
       if (playerInitial[0].value === playerInitial[1].value) {
         setIsSplitAvailable(true)
         setSplitFirstPlayerTotal(parseInt(playerInitial[0].value))
@@ -94,6 +96,7 @@ function App() {
     }
   }
 
+
   // for loop that works with setTimeout
   // for (let i = 0; i < 4; i++) {
   //   await new Promise(resolve => {
@@ -112,6 +115,24 @@ function App() {
   //       resolve()
   //     }, 2000);
   //   })   
+  // }
+
+  // function newGame() {
+  //   // if no bet is placed
+  //   if (currentBet === 0) {
+  //     alert("No Bet Placed")
+  //   }
+  //   // if deck has no cards left
+  //   if (deck.length > 0) {
+  //     if (gameStage !== GameStage.INITIAL_DEAL) {
+  //       setGameStage(GameStage.INITIAL_DEAL)
+  //       setPlayerSubtracted(0)
+  //       setDealerSubtracted(0)
+  //       setOutcome('')
+  //       setIsDouble(false)
+  //     }
+  //     setIsBet(false)
+  //   }
   // }
   
   const [splitFirstPlayerTotal, setSplitFirstPlayerTotal] = useState('')
@@ -236,14 +257,16 @@ function App() {
 
   function stand() {
     if (gameStage === GameStage.PLAYER_TURN) {
+      // if dealer greater than 17
       if (dealerTotal >= 17 && dealerCards.length == 2) {
+        // if dealer has soft 17
         if (dealerTotal === 17 && dealerCards.filter(card => card.value === 'A').length == 1) {
           setGameStage(GameStage.DEALER_TURN)
         } else {
           setGameStage(GameStage.GAME_OVER)
         }
       } else {
-        if (isSplitFinished === false) {
+        if (isSplitFinished === false && isSplit) {
           setIsSplitFinished(true)
         } else {
           setGameStage(GameStage.DEALER_TURN)
@@ -454,6 +477,7 @@ function App() {
         playerCardsSplit={playerCardsSplit}
         splitFirstPlayerTotal={splitFirstPlayerTotal}
         splitSecondPlayerTotal={splitSecondPlayerTotal}
+        isSplitFinished={isSplitFinished}
       />
       <div style={{ height: '30px' }}>
         {gameStage === GameStage.PLAYER_TURN ? (showBook ? bookAdvice : '') : (gameStage === GameStage.GAME_OVER ? <p className='winner' style={{color: winnerColor}}>{outcome}</p> : '')}
