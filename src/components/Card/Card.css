@@ -5,7 +5,7 @@
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-template-rows: repeat(4, 1fr);
-  border-radius: 3px;
+  border-radius: 10px;
 }
 
 .value {

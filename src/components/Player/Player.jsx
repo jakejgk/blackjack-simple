@@ -6,7 +6,7 @@ const Player = ({ playerCards, playerCardsSplit, gameStage, playerTotal, isSplit
   return (
     <div className='player-container'>
       <div className='hand-container'>
-        {gameStage == 'INITIAL_DEAL' ? <><Card /><Card /></> : (!isSplit ? playerCards.map((card, index) => {
+        {gameStage == 'START' ? <><Card /><Card /></> : (!isSplit ? playerCards.map((card, index) => {
           return <Card 
                     value={card.value}
                     suit={card.suit}
@@ -47,7 +47,7 @@ const Player = ({ playerCards, playerCardsSplit, gameStage, playerTotal, isSplit
         
       </div> 
         : ''}
-      <div className='total'>{isSplit ? '' : (gameStage == 'INITIAL_DEAL' ? '0' : (playerTotal <= 21 ? (playerTotal == 21 ? (playerCards.length === 2 ? 'Blackjack!' : '21') : playerTotal) : 'Bust'))}</div>
+      <div className='total'>{isSplit ? '' : (gameStage == 'START' ? '0' : (playerTotal <= 21 ? (playerTotal == 21 ? (playerCards.length === 2 ? 'Blackjack!' : '21') : playerTotal) : 'Bust'))}</div>
     </div>
   )
 }

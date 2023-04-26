@@ -12,6 +12,7 @@ import { cardValue, book } from './functions.js';
 function App() {
 
   const GameStage = {
+    START: 'START',
     INITIAL_DEAL: 'INITIAL_DEAL',
     PLAYER_TURN: 'PLAYER_TURN',
     DEALER_TURN: 'DEALER_TURN',
@@ -19,7 +20,7 @@ function App() {
   }
 
   const [deck, setDeck] = useState(_.shuffle(deckData))
-  const [gameStage, setGameStage] = useState(GameStage.INITIAL_DEAL)
+  const [gameStage, setGameStage] = useState(GameStage.START)
   const [dealerCards, setDealerCards] = useState([])
   const [dealerTotal, setDealerTotal] = useState('')
   const [dealerSubtracted, setDealerSubtracted] = useState(0)
@@ -95,6 +96,41 @@ function App() {
       alert('No bet placed')
     }
   }
+
+  // IN PROGRESS, MAKE NEW BRANCH
+  // function newNewGame() {
+  //   if (gameStage === GameStage.START) {
+  //     setGameStage(GameStage.INITIAL_DEAL)
+  //   }
+  //   let card = deck.pop()
+  //   let val = cardValue(card.value)
+  //   console.log(playerCards.length)
+  //   if (playerCards.length === 0) {
+  //     setPlayerCards([card])
+  //     setPlayerTotal(parseInt(val))
+  //   } else if (playerCards.length === 1 && dealerCards.length === 0) {
+  //     setDealerCards([card])
+  //     setDealerTotal(parseInt(val))
+  //   } else if (playerCards.length === 1 && dealerCards.length === 1) {
+  //     setPlayerCards([...playerCards, card])
+  //     setPlayerTotal(playerTotal + parseInt(val))
+  //   } else if (playerCards.length === 2 && dealerCards.length === 1) {
+  //     setDealerCards([...dealerCards, card])
+  //     setDealerTotal(dealerTotal + parseInt(val))
+  //   }
+  //   if (playerCards.length === 2 && dealerCards.length === 2) {
+  //     setGameStage(GameStage.PLAYER_TURN)
+  //   }
+  // }
+
+  // useEffect(() => {
+  //   if (gameStage === GameStage.INITIAL_DEAL && playerCards.length > 0) {
+  //     setTimeout(() => {
+  //       newNewGame()
+  //     }, 1000)
+
+  //   }
+  // }, [gameStage, playerCards, dealerCards])
 
 
   // for loop that works with setTimeout

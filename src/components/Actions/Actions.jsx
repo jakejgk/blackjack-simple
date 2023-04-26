@@ -4,7 +4,7 @@ import './Actions.css';
 const Actions = ({ hit, stand, newGame, double, split, isSplitAvailable, isSplit, handleBet, gameStage}) => {
   return (
     <div className='buttons'>
-      {gameStage === 'INITIAL_DEAL' ? <button onClick={newGame}>Start New Game</button> 
+      {gameStage === 'START' ? <button onClick={newGame}>Start New Game</button> 
       : (gameStage === 'PLAYER_TURN' ? (!isSplitAvailable ? <>
       <button onClick={hit}>Hit</button>
       <button onClick={stand}>Stand</button>
