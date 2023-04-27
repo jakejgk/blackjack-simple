@@ -22,11 +22,17 @@
   margin: 10px 15px 0 15px;
 }
 
+/* .split-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: auto;
+} */
+
 .split-container {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 600px;
 }
 
 .player-cards-container {
@@ -44,6 +50,8 @@
 .column {
   display: flex;
   flex-direction: column;
+  width: 600px;
+  align-items: center;
 }
 
 .split-cards-container > * {
@@ -67,6 +75,6 @@
 
 .split-total {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-evenly;
 }
 

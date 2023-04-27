@@ -15,7 +15,7 @@ const Player = ({ playerCards, playerCardsSplit, gameStage, playerTotal, isSplit
         })
         : <div className='split-container'>
             <div className='column'>
-              <div className='player-cards-container'>
+              <div className={`player-cards-container ${isSplit ? 'split' : ''}`}>
                 {playerCards.map((card, index) => {
                   return <Card 
                             value={card.value}
@@ -42,8 +42,8 @@ const Player = ({ playerCards, playerCardsSplit, gameStage, playerTotal, isSplit
         )}
       </div>
       {isSplit ? <div className='split-total'>
-        <div style={{ marginLeft: '10px', color: !isSplitFinished ? 'green' : ''}}>{splitFirstPlayerTotal}</div>
-        <div style={{ marginRight: '10px', color: !isSplitFinished ? '' : 'green'}}>{splitSecondPlayerTotal}</div>
+        <div style={{ marginRight: '140px', color: !isSplitFinished ? 'green' : ''}}>{splitFirstPlayerTotal}</div>
+        <div style={{ marginLeft: '140px', color: !isSplitFinished ? '' : 'green'}}>{splitSecondPlayerTotal}</div>
         
       </div> 
         : ''}
