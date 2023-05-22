@@ -24,7 +24,6 @@ const Player = ({ playerCards, playerCardsSplit, gameStage, playerTotal, isSplit
                   />
                 })}
               </div>
-              {/* <div id='split-total-left'>{isSplit ? splitFirstPlayerTotal : ''}</div> */}
             </div>
             <div className='column'>
               <div className='split-cards-container'>
@@ -36,15 +35,14 @@ const Player = ({ playerCards, playerCardsSplit, gameStage, playerTotal, isSplit
                   />
                 })}
               </div>
-              {/* <div id='split-total-right'>{isSplit ? splitSecondPlayerTotal : ''}</div> */}
             </div>
         </div>
         )}
       </div>
-      {isSplit ? <div className='split-total'>
+      {isSplit ? 
+      <div className='split-total'>
         <div style={{ marginRight: '140px', color: !isSplitFinished ? 'green' : ''}}>{splitFirstPlayerTotal}</div>
-        <div style={{ marginLeft: '140px', color: !isSplitFinished ? '' : 'green'}}>{splitSecondPlayerTotal}</div>
-        
+        <div style={{ marginLeft: '140px', color: isSplitFinished && gameStage === 'PLAYER_TURN' ? 'green' : ''}}>{splitSecondPlayerTotal}</div>
       </div> 
         : ''}
       <div className='total'>{isSplit ? '' : (gameStage == 'START' ? '0' : (playerTotal <= 21 ? (playerTotal == 21 ? (playerCards.length === 2 ? 'Blackjack!' : '21') : playerTotal) : 'Bust'))}</div>

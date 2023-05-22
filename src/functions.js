@@ -12,12 +12,11 @@ export function cardValue(card) {
 }
 
 // figure this out
-export function book(game, playerC, playerT, dealerC) {
+export function book(game, playerC, playerT, dealerC, playerSub) {
   if (game === 'PLAYER_TURN') {
     let dealerNum = dealerC[1].value
     // if player has 2 of the same card
     if (playerC.length === 2 && playerC[0].value === playerC[1].value) {
-      console.log('fired')
       console.log(playerC[0].value)
       // if player has aces
       if (playerC[0].value === 'A') {
@@ -71,8 +70,8 @@ export function book(game, playerC, playerT, dealerC) {
           return 'Hit'
         }
       }
-    // if player has no aces
-    } else if (playerC.filter(card => card.value === 'A').length === 0) {
+    // hard totals (if player has no aces, or if all aces are 1)
+    } else if (playerC.filter(card => card.value === 'A').length === 0 || playerC.filter(card => card.value === 'A').length === playerSub) {
       // if player has 17 - 20
       if (17 <= playerT && playerT < 21) {
         return 'Stand'
@@ -115,49 +114,109 @@ export function book(game, playerC, playerT, dealerC) {
       } else if (5 <= playerT && playerT <= 7) {
         return 'Hit Duh'
       }
-    // if player has an ace
+    // soft totals (if player has an ace as an 11)
     } else {
-      // if player has 20
-      if (playerT == 20) {
-        return 'Stand'
-      // if player has 19
-      } else if (playerT == 19) {
-        if (dealerNum === 6) {
-          return 'Double'
-        } else {
+      // if playerSub equals amount of aces in deck, continue normally as if no ace
+      // JUST ADDED THIS, NEED TO CHECK
+      if (playerC.filter(card => card.value == 'A').length !== playerSub) {
+        // soft totals
+        if (playerT == 13) {
+          if (5 <= dealerNum && dealerNum <= 6) {
+            return 'Double'
+          } else {
+            return 'Hit'
+          }
+        } else if (playerT == 14) {
+          if (5 <= dealerNum && dealerNum <= 6) {
+            return 'Double'
+          } else {
+            return 'Hit'
+          }
+        } else if (playerT == 15) {
+          if (4 <= dealerNum && dealerNum <= 6) {
+            return 'Double'
+          } else {
+            return 'Hit'
+          }
+        } else if (playerT == 16) {
+          if (4 <= dealerNum && dealerNum <= 6) {
+            return 'Double'
+          } else {
+            return 'Hit'
+          }
+        } else if (playerT == 17) {
+          if (3 <= dealerNum && dealerNum <= 6) {
+            return 'Double'
+          } else {
+            return 'Hit'
+          }
+        } else if (playerT == 18) {
+          if (2 <= dealerNum && dealerNum <= 6) {
+            if (playerC.length > 2) {
+              return 'Hit'
+            } else {
+              return 'Double'
+            }
+          } else if (9 <= dealerNum && dealerNum <= 11) {
+            return 'Hit'
+          } else {
+            return 'Stand'
+          }
+        } else if (playerT == 19) {
+          if (dealerNum == 6) {
+            return 'Double'
+          } else {
+            return 'Stand'
+          }
+        } else if (playerT == 20) {
           return 'Stand'
-        }
-      // if player has 18
-      } else if (playerT == 18) {
-        if (2 <= dealerNum && dealerNum <= 6) {
-          return 'Double'
-        } else if (9 <= dealerNum && dealerNum <= 11) {
-          return 'Hit'
-        } else {
-          return 'Stand'
-        }
-      // if player has 17
-      } else if (playerT == 17) {
-        if (3 <= dealerNum && dealerNum <= 6) {
-          return 'Double'
-        } else {
-          return 'Hit'
-        }
-      // if player has 15 - 16
-      } else if (15 <= playerT && playerT <= 16) {
-        if (4 <= dealerNum && dealerNum <= 6) {
-          return 'Double'
-        } else {
-          return 'Hit'
-        }
-      // if player has 13 - 14
-      } else if (13 <= playerT && playerT <= 14) {
-        if (5 <= dealerNum && dealerNum <= 6) {
-          return 'Double'
-        } else {
-          return 'Hit'
         }
       }
+
+        // also soft totals
+      //   if (playerT)
+      //   // if player has 20
+      //   if (playerT == 20) {
+      //     return 'Stand'
+      //   // if player has 19
+      //   } else if (playerT == 19) {
+      //     if (dealerNum === 6) {
+      //       return 'Double'
+      //     } else {
+      //       return 'Stand'
+      //     }
+      //   // if player has 18
+      //   } else if (playerT == 18) {
+      //     if (2 <= dealerNum && dealerNum <= 6) {
+      //       return 'Double'
+      //     } else if (9 <= dealerNum && dealerNum <= 11) {
+      //       return 'Hit'
+      //     } else {
+      //       return 'Stand'
+      //     }
+      //   // if player has 17
+      //   } else if (playerT == 17) {
+      //     if (3 <= dealerNum && dealerNum <= 6) {
+      //       return 'Double'
+      //     } else {
+      //       return 'Hit'
+      //     }
+      //   // if player has 15 - 16
+      //   } else if (15 <= playerT && playerT <= 16) {
+      //     if (4 <= dealerNum && dealerNum <= 6) {
+      //       return 'Double'
+      //     } else {
+      //       return 'Hit'
+      //     }
+      //   // if player has 13 - 14
+      //   } else if (13 <= playerT && playerT <= 14) {
+      //     if (5 <= dealerNum && dealerNum <= 6) {
+      //       return 'Double'
+      //     } else {
+      //       return 'Hit'
+      //     }
+      //   }
+      // }
     }
   }
 }

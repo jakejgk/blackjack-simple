@@ -46,6 +46,8 @@ function App() {
         setDealerSubtracted(0)
         setOutcome('')
         setIsDouble(false)
+        setIsSplit(false)
+        setIsSplitAvailable(false)
       }
       setIsBet(false)
       let who = 'player'
@@ -66,6 +68,10 @@ function App() {
           dealerNum += parseInt(val)
         } 
       }
+      // if player has blackjack
+      if (playerNum === 21 && playerCards.length === 2) {
+        setGameStage(GameStage.DEALER_TURN)
+      }
       // if first 2 player cards are the same
       if (playerInitial[0].value === playerInitial[1].value) {
         setIsSplitAvailable(true)
@@ -76,6 +82,8 @@ function App() {
       if (playerInitial.slice(0, 2).filter(card => card.value === 'A').length === 2) {
         setPlayerTotal(12)
         setPlayerSubtracted(prevPlayerSubtracted => prevPlayerSubtracted + 1)
+        setSplitFirstPlayerTotal(11)
+        setSplitSecondPlayerTotal(11)
       } else {
         setPlayerTotal(playerNum)
       }
@@ -184,6 +192,9 @@ function App() {
     if (isSplit) {
       // if first split is not done
       if (!isSplitFinished) {
+        if (playerCards[0].value === 'A') {
+          setIsSplitFinished(true)
+        }
         if (gameStage == 'PLAYER_TURN' && splitFirstPlayerTotal + val > 21) {
           // if recent card is an ace, make val 1
           if (val == 11) {
@@ -205,6 +216,9 @@ function App() {
         setSplitFirstPlayerTotal(() => splitFirstPlayerTotal + playerNum)
         setPlayerCards(() => [...playerCards, card])
       } else {
+        if (playerCardsSplit[0].value === 'A') {
+          setGameStage(GameStage.DEALER_TURN)
+        }
           if (gameStage == 'PLAYER_TURN' && splitSecondPlayerTotal + val > 21) {
             // if recent card is an ace, make val 1
             if (val == 11) {
@@ -251,6 +265,20 @@ function App() {
     let dealerNum = 0;
     let card = deck.pop()
     let val = parseInt(cardValue(card.value))
+    // dealing with situations where game isnt set to game_over already and dealer deals (double)
+    // if ace in dealer initial hand
+    if (dealerCards.filter(card => card.value === 'A').length > 0) {
+      if (dealerTotal >= 18) {
+        setGameStage(GameStage.GAME_OVER)
+      }
+    } else {
+      if (dealerTotal >= 17) {
+        setGameStage(GameStage.GAME_OVER)
+      }
+    }
+    if (playerTotal > 21) {
+      setGameStage(GameStage.GAME_OVER)
+    }
     // if dealer turn and if dealerTotal + new card is greater than 21
     if (gameStage === 'DEALER_TURN' && dealerTotal + val > 21) {
       // if recent card is an ace, make val 1
@@ -403,7 +431,7 @@ function App() {
   // triggers book advice on each card dealt to player
   let dealerNum;
   useEffect(() => {
-    setBookAdvice(book(gameStage, playerCards, playerTotal, dealerCards))
+    setBookAdvice(book(gameStage, playerCards, playerTotal, dealerCards, playerSubtracted))
   }, [playerCards])
 
   // for sidebar
