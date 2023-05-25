@@ -1,7 +1,7 @@
 import React from 'react';
 import './Actions.css';
 
-const Actions = ({ hit, stand, newGame, double, split, isSplitAvailable, isSplit, handleBet, gameStage}) => {
+const Actions = ({ hit, stand, newGame, newNewGame, double, split, isSplitAvailable, isSplit, handleBet, gameStage}) => {
   return (
     <div className='buttons'>
       {gameStage === 'START' ? <button onClick={newGame}>Start New Game</button> 
@@ -25,7 +25,7 @@ const Actions = ({ hit, stand, newGame, double, split, isSplitAvailable, isSplit
       )
       ) 
       : (gameStage === 'DEALER_TURN' ? <button id='dealer-turn-btn'>Play Again</button> 
-      : (gameStage === 'GAME_OVER' ?  <><button onClick={newGame}>Play Again</button><button value='rebet' id='rebet-btn' onClick={handleBet}>Rebet</button></> : '')))}
+      : (gameStage === 'GAME_OVER' ?  <><button onClick={newNewGame}>Play Again</button><button value='rebet' id='rebet-btn' onClick={handleBet}>Rebet</button></> : '')))}
 
       {/*  */}
     </div>

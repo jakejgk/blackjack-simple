@@ -105,31 +105,100 @@ function App() {
     }
   }
 
-  // IN PROGRESS, MAKE NEW BRANCH
-  // function newNewGame() {
-  //   if (gameStage === GameStage.START) {
-  //     setGameStage(GameStage.INITIAL_DEAL)
-  //   }
-  //   let card = deck.pop()
-  //   let val = cardValue(card.value)
-  //   console.log(playerCards.length)
-  //   if (playerCards.length === 0) {
-  //     setPlayerCards([card])
-  //     setPlayerTotal(parseInt(val))
-  //   } else if (playerCards.length === 1 && dealerCards.length === 0) {
-  //     setDealerCards([card])
-  //     setDealerTotal(parseInt(val))
-  //   } else if (playerCards.length === 1 && dealerCards.length === 1) {
-  //     setPlayerCards([...playerCards, card])
-  //     setPlayerTotal(playerTotal + parseInt(val))
-  //   } else if (playerCards.length === 2 && dealerCards.length === 1) {
-  //     setDealerCards([...dealerCards, card])
-  //     setDealerTotal(dealerTotal + parseInt(val))
-  //   }
-  //   if (playerCards.length === 2 && dealerCards.length === 2) {
-  //     setGameStage(GameStage.PLAYER_TURN)
-  //   }
-  // }
+
+  const newNewGame = async () => {
+    // FIX to make dealer card not render immediately
+    
+    const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+    if (currentBet === 0) {
+      return
+    }
+    if (deck.length > 0) {
+      if (gameStage !== 'INITIAL_DEAL') {
+        console.log('PLAY AGAIN!!')
+        setGameStage(GameStage.INITIAL_DEAL)
+        setPlayerSubtracted(0)
+        setDealerSubtracted(0)
+        setOutcome('')
+        setIsDouble(false)
+        setIsSplit(false)
+        setIsSplitAvailable(false)
+      }
+      setIsBet(false)
+      
+      let playerInitial = [];
+      let playerNum = 0;
+      let dealerInitial = [];
+      let dealerNum = 0;
+      let card;
+      let val;
+
+      await delay(1000);
+      card = deck.pop()
+      val = cardValue(card.value)
+      playerNum += parseInt(val)
+      setPlayerCards((prevCards) => [...prevCards, card])
+      setPlayerTotal(playerNum)
+      await delay(1000);
+
+      card = deck.pop()
+      val = cardValue(card.value)
+      dealerNum += parseInt(val)
+      setDealerCards((prevCards) => [...prevCards, card])
+      setDealerTotal(dealerNum)
+      await delay(1000);
+
+      card = deck.pop()
+      val = cardValue(card.value)
+      playerNum += parseInt(val)
+      setPlayerCards((prevCards) => [...prevCards, card])
+      setPlayerTotal(playerNum)
+      await delay(1000);
+
+      card = deck.pop()
+      val = cardValue(card.value)
+      dealerNum += parseInt(val)
+      setDealerCards((prevCards) => [...prevCards, card])
+      setDealerTotal(dealerNum)
+      setGameStage(() => GameStage.PLAYER_TURN)
+
+      // if player has blackjack
+      if (playerNum === 21 && playerCards.length === 2) {
+        setGameStage(GameStage.DEALER_TURN)
+      }
+      // if first 2 player cards are the same
+      if (playerInitial[0].value === playerInitial[1].value) {
+        setIsSplitAvailable(true)
+        setSplitFirstPlayerTotal(parseInt(playerInitial[0].value))
+        setSplitSecondPlayerTotal(parseInt(playerInitial[1].value))
+      }
+      // if first 2 player cards are both aces
+      if (playerInitial.slice(0, 2).filter(card => card.value === 'A').length === 2) {
+        setPlayerTotal(12)
+        setPlayerSubtracted(prevPlayerSubtracted => prevPlayerSubtracted + 1)
+        setSplitFirstPlayerTotal(11)
+        setSplitSecondPlayerTotal(11)
+      } else {
+        setPlayerTotal(playerNum)
+      }
+      // if first 2 dealer cards are both aces
+      if (dealerInitial.slice(0, 2).filter(card => card.value === 'A').length === 2) {
+        setDealerTotal(12)
+        setDealerSubtracted(prevDealerSubtracted => prevDealerSubtracted + 1)
+      } else {
+        setDealerTotal(dealerNum)
+      }
+      // setPlayerCards(playerInitial)
+      // setDealerCards(dealerInitial)
+
+      // fix these conditions
+    } else if (deck.length < 4) {
+      alert('No Cards Left')
+    } else if (currentBet === 0) {
+      alert('No bet placed')
+    }
+  }
 
   // useEffect(() => {
   //   if (gameStage === GameStage.INITIAL_DEAL && playerCards.length > 0) {
@@ -302,7 +371,6 @@ function App() {
   }
 
   // interval for dealer deal
-  let intervalID;
   useEffect(() => {
     if (gameStage == 'DEALER_TURN') {
       setTimeout(() => {
@@ -310,6 +378,8 @@ function App() {
       }, '1000');
     }
   }, [gameStage, dealerCards])
+
+  
 
   function hit() {
     if (playerTotal < 21) {
@@ -550,7 +620,7 @@ function App() {
         <Actions 
           hit={hit}
           stand={stand}
-          newGame={newGame}
+          newGame={newNewGame}
           double={double}
           split={split}
           isSplitAvailable={isSplitAvailable}

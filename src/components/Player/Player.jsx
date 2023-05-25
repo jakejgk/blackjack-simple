@@ -13,6 +13,7 @@ const Player = ({ playerCards, playerCardsSplit, gameStage, playerTotal, isSplit
                     key={index}
                   />
         })
+        // use something like this to render each card while maintaining blank cards if not dealt yet: gameStage == 'INITIAL_DEAL' && playerCards.length < 2
         : <div className='split-container'>
             <div className='column'>
               <div className={`player-cards-container ${isSplit ? 'split' : ''}`}>
