@@ -5,7 +5,7 @@ const Actions = ({ hit, stand, newGame, newNewGame, double, split, isSplitAvaila
   return (
     <div className='buttons'>
       {gameStage === 'START' ? <button onClick={newGame}>Start New Game</button> 
-      : (gameStage === 'PLAYER_TURN' ? (!isSplitAvailable ? <>
+      : gameStage === 'INITIAL_DEAL' ? <button id='dealer-turn-btn'>Play Again</button> : (gameStage === 'PLAYER_TURN' ? (!isSplitAvailable ? <>
       <button onClick={hit}>Hit</button>
       <button onClick={stand}>Stand</button>
       <button onClick={double}>Double</button>
